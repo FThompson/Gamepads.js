@@ -1,0 +1,3 @@
+A simple JavaScript module for tracking Gamepads and events pertaining to their usage.
+
+The [existing Gamepad standard](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API) lacks support for button/joystick events and gamepadconnected/gamepaddisconnected events do not work consistently across browsers. This module serves to offer a standard event-handling implementation across multiple browsers.
