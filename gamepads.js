@@ -73,8 +73,7 @@ class GamepadHandler {
 class Gamepad {
     constructor(gamepad) {
         this.gamepad = gamepad
-        this.deadzone = 0.10
-        this.callbacks = {
+        this.callbacks = {  // map required for array keys on joystick, used for convenience elsewhere
             'buttonpress': new Map(),
             'buttonrelease': new Map(),
             'buttonaxischange': new Map(),
@@ -96,34 +95,23 @@ class Gamepad {
         }
     }
 
+    get deadzone() {
+        return this._deadzone || 0.10
+    }
+
+    set deadzone(deadzone) {
+        if (deadzone >= 1.0 || deadzone < 0) {
+            throw Error('deadzone must be in range [0, 1)')
+        }
+        this._deadzone = deadzone
+    }
+
     update() {
         if (this.gamepad.connected && this._last.connected) {  // compare only against recent connected frame
             this._compareButtons(this.gamepad.buttons, this._last.buttons)
             this._compareAxes(this.gamepad.axes, this._last.axes)
         }
         this._setLastValues()
-    }
-
-    // TODO: optimization to avoid wrecking cpu at high poll rates
-    // currently iterating thru callbacks to supposedly save cpu for application with few callback needs
-    // should this iterate through buttons instead regardless of callbacks registered?
-    // or should Gamepad track separately which buttons have callbacks and only check those?
-    _compareButtons(newValues, oldValues) {
-        this.callbacks['buttonpress'].forEach((callbacks, index) => {
-            if (newValues[index].pressed && !oldValues[index].pressed) {
-                callbacks.forEach(callback => callback())
-            }
-        })
-        this.callbacks['buttonrelease'].forEach((callbacks, index) => {
-            if (!newValues[index].pressed && oldValues[index].pressed) {
-                callbacks.forEach(callback => callback())
-            }
-        })
-        this.callbacks['buttonaxischange'].forEach((callbacks, index) => {
-            if (newValues[index].value !== oldValues[index].value) {
-                callbacks.forEach(callback => callback(newValues[index].value))
-            }
-        })
     }
 
     _compareAxes(newValues, oldValues) {
@@ -142,6 +130,24 @@ class Gamepad {
 
     _applyDeadzone(value) {
         return Math.abs(value) > this.deadzone ? value : 0
+    }
+
+    // TODO: optimization to avoid wrecking cpu at high poll rates
+    // currently iterating thru callbacks to supposedly save cpu for application with few callback needs
+    // should this iterate through buttons instead regardless of callbacks registered?
+    // or should Gamepad track separately which buttons have callbacks and only check those?
+    _compareButtons(newValues, oldValues) {
+        this._checkValues(this.callbacks['buttonpress'], newValues, oldValues, (nv, ov) => nv.pressed && !ov.pressed)
+        this._checkValues(this.callbacks['buttonrelease'], newValues, oldValues, (nv, ov) => !nv.pressed && ov.pressed)
+        this._checkValues(this.callbacks['buttonaxischange'], newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
+    }
+
+    _checkValues(callbackMap, newValues, oldValues, predicate, passValue) {
+        callbackMap.forEach((callbacks, index) => {
+            if (predicate(newValues[index], oldValues[index])) {
+                callbacks.forEach(callback => passValue ? callback(newValues[index].value) : callback())
+            }
+        })
     }
 
     // event types: buttonpress, buttonrelease, buttonaxischange, joystickmove
