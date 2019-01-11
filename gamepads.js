@@ -4,7 +4,6 @@ class GamepadHandler {
             return GamepadHandler._instance
         }
         this.gamepads = {}
-        this.pollFrequency = 60
         this.paused = false
         this.callbacks = {
             'connect': [],
@@ -18,7 +17,7 @@ class GamepadHandler {
         this._run()
     }
 
-    pause() {
+    stop() {
         this.paused = true
     }
 
@@ -54,7 +53,7 @@ class GamepadHandler {
     _run() {
         this.poll()
         if (!this.paused) {
-            setTimeout(() => this._run(this), 1000 / this.pollFrequency)
+            requestAnimationFrame(() => this._run(this))
         }
     }
 

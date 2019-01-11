@@ -38,7 +38,7 @@ window.addEventListener('load', () => {
         console.log(gamepads)
     })
     document.getElementById('p').addEventListener('click', () => {
-        gamepads.pause()
+        gamepads.stop()
     })
     document.getElementById('s').addEventListener('click', () => {
         gamepads.start()
