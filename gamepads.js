@@ -180,7 +180,9 @@ export const StandardMapping = {
         JOYSTICK_LEFT_HORIZONTAL: 0,
         JOYSTICK_LEFT_VERTICAL: 1,
         JOYSTICK_RIGHT_HORIZONTAL: 2,
-        JOYSTICK_RIGHT_VERTICAL: 3
+        JOYSTICK_RIGHT_VERTICAL: 3,
+        JOYSTICK_LEFT: [0, 1],
+        JOYSTICK_RIGHT: [2, 3]
     }
 }
 
