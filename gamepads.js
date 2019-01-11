@@ -119,8 +119,8 @@ class Gamepad {
             }
         })
         Object.keys(this.callbacks['buttonaxischange']).forEach(index => {
-            if (newValues[index] !== oldValues[index]) {
-                this.callbacks['buttonaxischange'][index].forEach(callback => callback(newValues[index]))
+            if (newValues[index].value !== oldValues[index].value) {
+                this.callbacks['buttonaxischange'][index].forEach(callback => callback(newValues[index].value))
             }
         })
     }
