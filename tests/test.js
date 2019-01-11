@@ -28,6 +28,9 @@ window.addEventListener('load', () => {
         myGamepad.removeEventListener('buttonpress', pressed, StandardMapping.Button.BUTTON_TOP)
         myGamepad.removeEventListener('buttonrelease', released, StandardMapping.Button.BUTTON_TOP)
     })
+    document.getElementById('c').addEventListener('click', () => {
+        console.log(gamepads)
+    })
     document.getElementById('p').addEventListener('click', () => {
         gamepads.pause()
     })

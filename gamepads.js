@@ -25,9 +25,18 @@ class GamepadHandler {
     poll() {
         // must call getGamepads() to force each gamepad object to update for some browsers (Chrome)
         let gamepads = navigator.getGamepads ? navigator.getGamepads() : []
+        let connectedIndices = []
         for (let index in gamepads) {
             if (index && gamepads[index] !== null) {
                 this._updateGamePad(gamepads[index])
+                connectedIndices.push(index)
+            }
+        }
+        // check if any tracked gamepads are now absent/disconnected from the browser's gamepads
+        for (let index in this.gamepads) {
+            if (!connectedIndices.includes(index)) {
+                this.callbacks['disconnect'].forEach(callback => callback(this.gamepads[index]))
+                delete this.gamepads[index]
             }
         }
     }
