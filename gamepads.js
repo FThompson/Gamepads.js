@@ -73,11 +73,12 @@ class GamepadHandler {
 class Gamepad {
     constructor(gamepad) {
         this.gamepad = gamepad
+        this.deadzone = 0.10
         this.callbacks = {
-            'buttonpress': {},
-            'buttonrelease': {},
-            'buttonaxischange': {},
-            'joystickmove': {}
+            'buttonpress': new Map(),
+            'buttonrelease': new Map(),
+            'buttonaxischange': new Map(),
+            'joystickmove': new Map()
         }
         this._setLastValues()
     }
@@ -108,33 +109,39 @@ class Gamepad {
     // should this iterate through buttons instead regardless of callbacks registered?
     // or should Gamepad track separately which buttons have callbacks and only check those?
     _compareButtons(newValues, oldValues) {
-        Object.keys(this.callbacks['buttonpress']).forEach(index => {
+        this.callbacks['buttonpress'].forEach((callbacks, index) => {
             if (newValues[index].pressed && !oldValues[index].pressed) {
-                this.callbacks['buttonpress'][index].forEach(callback => callback())
+                callbacks.forEach(callback => callback())
             }
         })
-        Object.keys(this.callbacks['buttonrelease']).forEach(index => {
+        this.callbacks['buttonrelease'].forEach((callbacks, index) => {
             if (!newValues[index].pressed && oldValues[index].pressed) {
-                this.callbacks['buttonrelease'][index].forEach(callback => callback())
+                callbacks.forEach(callback => callback())
             }
         })
-        Object.keys(this.callbacks['buttonaxischange']).forEach(index => {
+        this.callbacks['buttonaxischange'].forEach((callbacks, index) => {
             if (newValues[index].value !== oldValues[index].value) {
-                this.callbacks['buttonaxischange'][index].forEach(callback => callback(newValues[index].value))
+                callbacks.forEach(callback => callback(newValues[index].value))
             }
         })
     }
 
     _compareAxes(newValues, oldValues) {
-        Object.keys(this.callbacks['joystickmove']).forEach(indices => {
-            let newHorizontal = newValues[indices[0]], newVertical = newValues[indices[1]]
-            let oldHorizontal = oldValues[indices[0]], oldVertical = oldValues[indices[1]]
+        this.callbacks['joystickmove'].forEach((callbacks, indices) => {
+            let newHorizontal = this._applyDeadzone(newValues[indices[0]])
+            let newVertical = this._applyDeadzone(newValues[indices[1]])
+            let oldHorizontal = this._applyDeadzone(oldValues[indices[0]])
+            let oldVertical = this._applyDeadzone(oldValues[indices[1]])
             if (newHorizontal !== oldHorizontal || newVertical !== oldVertical) {
-                let newValues = [newHorizontal, oldHorizontal]
-                let oldValues = [oldHorizontal, oldVertical]
-                this.callbacks['joystickmove'][indices].forEach(callback => callback(newValues, oldValues))
+                callbacks.forEach(callback => {
+                    return callback([newHorizontal, newVertical], [oldHorizontal, oldVertical])
+                })
             }
         })
+    }
+
+    _applyDeadzone(value) {
+        return Math.abs(value) > this.deadzone ? value : 0
     }
 
     // event types: buttonpress, buttonrelease, buttonaxischange, joystickmove
@@ -143,14 +150,15 @@ class Gamepad {
     // for joystickmove event, index [indexH, indexV] and callback(horizontal, vertical)
     // TODO: reconsider, is index necessary here or should the button be passed to the callback?
     addEventListener(type, listener, index=-1) {
-        if (!(index in this.callbacks[type])) {
-            this.callbacks[type][index] = []
+        if (!this.callbacks[type].has(index)) {
+            this.callbacks[type].set(index, [])
         }
-        this.callbacks[type][index].push(listener)
+        this.callbacks[type].get(index).push(listener)
     }
     
     removeEventListener(type, listener, index) {
-        this.callbacks[type][index] = this.callbacks[type][index].filter(callback => callback !== listener)
+        this.callbacks[type].delete(index)
+        // this.callbacks[type][index] = this.callbacks[type][index].filter(callback => callback !== listener)
     }
 }
 
