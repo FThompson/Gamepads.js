@@ -72,9 +72,11 @@ class Gamepad {
         this.callbacks = {  // map required for array keys on joystick, used for convenience elsewhere
             'buttonpress': new Map(),
             'buttonrelease': new Map(),
-            'buttonaxischange': new Map(),
+            'buttonvaluechange': new Map(),
+            'axischange': new Map(),
             'joystickmove': new Map()
         }
+        this.deadzones = {}
         this._setLastValues()
     }
 
@@ -91,59 +93,89 @@ class Gamepad {
         }
     }
 
-    get deadzone() {
+    get joystickDeadzone() {
         return this._deadzone || 0.10
     }
 
-    set deadzone(deadzone) {
-        if (deadzone >= 1.0 || deadzone < 0) {
-            throw Error('deadzone must be in range [0, 1)')
-        }
+    set joystickDeadzone(deadzone) {
+        this._checkDeadzone(deadzone)
         this._deadzone = deadzone
+    }
+
+    getAxisDeadzone(index) {
+        return this.deadzones[index]
+    }
+
+    setAxisDeadzone(index, deadzone) {
+        this._checkDeadzone(deadzone)
+        this.deadzones[index] = deadzone
+    }
+
+    _checkDeadzone(deadzone) {
+        if (deadzone >= 1.0 || deadzone < 0) {
+            throw new Error('deadzone must be in range [0, 1)')
+        }
     }
 
     update() {
         if (this.gamepad.connected && this._last.connected) {  // compare only against recent connected frame
             this._compareButtons(this.gamepad.buttons, this._last.buttons)
             this._compareAxes(this.gamepad.axes, this._last.axes)
+            this._compareJoysticks(this.gamepad.axes, this._last.axes)
         }
         this._setLastValues()
     }
 
-    _compareAxes(newValues, oldValues) {
-        // this code assumes that axes come in pairs (e.g. for joysticks)
-        let callbackMap = this.callbacks['joystickmove']
-        for (let i = 0; i < newValues.length; i += 2) {
-            let newHorizontal = this._applyDeadzone(newValues[i])
-            let newVertical = this._applyDeadzone(newValues[i + 1])
-            let oldHorizontal = this._applyDeadzone(oldValues[i])
-            let oldVertical = this._applyDeadzone(oldValues[i + 1])
-            if (newHorizontal !== oldHorizontal || newVertical !== oldVertical) {
-                let axes = [i, i + 1]
-                let callListener = callback => callback(axes, [newHorizontal, newVertical])
-                callbackMap.forEach((callbacks, indices) => {
-                    if (axes.every((value, i) => value === indices[i])) {  // if array key is equal to indices array
-                        callbacks.forEach(callListener)  // specific listeners
-                    }
-                    if (indices === -1) {
-                        callbacks.forEach(callListener)  // non-specific listeners
-                    }
-                })
+    _compareAxes(newAxes, oldAxes) {
+        let callbackMap = this.callbacks['axischange']
+        for (let i = 0; i < newAxes.length; i++) {
+            let newValue = this._applyAxisDeadzone(newAxes[i], i)
+            let oldValue = this._applyAxisDeadzone(oldAxes[i], i)
+            if (newValue !== oldValue) {
+                let callListener = callback => callback(i, newAxes[i])
+                if (callbackMap.has(i)) {
+                    callbackMap.get(i).forEach(callListener)  // specific listeners
+                }
+                if (callbackMap.has(-1)) {
+                    callbackMap.get(-1).forEach(callListener)  // non-specific listeners
+                }
             }
         }
     }
 
-    _applyDeadzone(value) {
-        return Math.abs(value) > this.deadzone ? value - this.deadzone : 0
+    _compareJoysticks(newAxes, oldAxes) {
+        this.callbacks['joystickmove'].forEach((callbacks, indices) => {
+            let newHorizontal = this._applyJoystickDeadzone(newAxes[indices[0]])
+            let newVertical = this._applyJoystickDeadzone(newAxes[indices[1]])
+            let oldHorizontal = this._applyJoystickDeadzone(oldAxes[indices[0]])
+            let oldVertical = this._applyJoystickDeadzone(oldAxes[indices[1]])
+            if (newHorizontal !== oldHorizontal || newVertical !== oldVertical) {
+                callbacks.forEach(callback => {
+                    return callback(indices, [newHorizontal, newVertical])
+                })
+            }
+        })
+    }
+
+    _applyJoystickDeadzone(value) {
+        return this._applyDeadzone(value, this.joystickDeadzone)
+    }
+
+    _applyAxisDeadzone(value, index) {
+        return index in this.deadzones ? this._applyDeadzone(value, this.deadzones[index]) : value
+    }
+
+    _applyDeadzone(value, deadzone) {
+        return Math.abs(value) > deadzone ? value - Math.sign(value) * deadzone : 0
     }
 
     _compareButtons(newValues, oldValues) {
-        this._checkValues(this.callbacks['buttonpress'], newValues, oldValues, (nv, ov) => nv.pressed && !ov.pressed)
-        this._checkValues(this.callbacks['buttonrelease'], newValues, oldValues, (nv, ov) => !nv.pressed && ov.pressed)
-        this._checkValues(this.callbacks['buttonaxischange'], newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
+        this._checkButtons(this.callbacks['buttonpress'], newValues, oldValues, (nv, ov) => nv.pressed && !ov.pressed)
+        this._checkButtons(this.callbacks['buttonrelease'], newValues, oldValues, (nv, ov) => !nv.pressed && ov.pressed)
+        this._checkButtons(this.callbacks['buttonvaluechange'], newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
     }
 
-    _checkValues(callbackMap, newValues, oldValues, predicate, passValue) {
+    _checkButtons(callbackMap, newValues, oldValues, predicate, passValue) {
         for (let i = 0; i < newValues.length; i++) {
             if (predicate(newValues[i], oldValues[i])) {
                 let callListener = callback => passValue ? callback(i, newValues[i].value) : callback(i)
@@ -157,12 +189,14 @@ class Gamepad {
         }
     }
 
-    // event types: buttonpress, buttonrelease, buttonaxischange, joystickmove
-    // for buttonpress/buttonrelase, callback()
-    // for buttonaxischange event, callback(value)
-    // for joystickmove event, index [indexH, indexV] and callback(horizontal, vertical)
+    // event types: buttonpress, buttonrelease, buttonvaluechange, axischange, joystickmove
+    // for buttonpress/buttonrelease, callback(i)
+    // for buttonvaluechange event, callback(i, value)
+    // for axischange event, callback(i, value)
+    // for joystickmove event, index [indexH, indexV] and callback([indexH, indexV], [valueH, valueV])
     // specify index to track only a specific button
     addEventListener(type, listener, index=-1) {
+        this._checkJoystickEvent(type, index)
         if (!this.callbacks[type].has(index)) {
             this.callbacks[type].set(index, [])
         }
@@ -170,8 +204,15 @@ class Gamepad {
     }
     
     removeEventListener(type, listener, index=-1) {
+        this._checkJoystickEvent(type, index)
         let filtered = this.callbacks[type].get(index).filter(callback => callback !== listener)
         this.callbacks[type].set(index, filtered)
+    }
+
+    _checkJoystickEvent(type, index) {
+        if (type === 'joystickmove' && !Array.isArray(index)) {
+            throw new Error('joystickmove events require a two-length index array')
+        }
     }
 }
 
