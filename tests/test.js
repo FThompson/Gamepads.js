@@ -33,6 +33,7 @@ window.addEventListener('load', () => {
         // myGamepad.removeEventListener('buttonvaluechange', printLTValue, StandardMapping.Button.TRIGGER_RIGHT)
         myGamepad.removeEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_LEFT)
         myGamepad.removeEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_RIGHT)
+        console.log(myGamepad)
     })
     document.getElementById('c').addEventListener('click', () => {
         console.log(gamepads)

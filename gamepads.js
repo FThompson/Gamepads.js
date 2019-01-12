@@ -111,6 +111,18 @@ class Gamepad {
         this.deadzones[index] = deadzone
     }
 
+    getButton(index) {
+        return this.gamepad.buttons[i]
+    }
+
+    getAxis(index) {
+        return this.gamepad.axes[i]
+    }
+
+    isConnected() {
+        return this.gamepad.connected
+    }
+
     _checkDeadzone(deadzone) {
         if (deadzone >= 1.0 || deadzone < 0) {
             throw new Error('deadzone must be in range [0, 1)')
