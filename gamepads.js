@@ -111,17 +111,26 @@ class Gamepad {
     }
 
     _compareAxes(newValues, oldValues) {
-        this.callbacks['joystickmove'].forEach((callbacks, indices) => {
-            let newHorizontal = this._applyDeadzone(newValues[indices[0]])
-            let newVertical = this._applyDeadzone(newValues[indices[1]])
-            let oldHorizontal = this._applyDeadzone(oldValues[indices[0]])
-            let oldVertical = this._applyDeadzone(oldValues[indices[1]])
+        // this code assumes that axes come in pairs (e.g. for joysticks)
+        let callbackMap = this.callbacks['joystickmove']
+        for (let i = 0; i < newValues.length; i += 2) {
+            let newHorizontal = this._applyDeadzone(newValues[i])
+            let newVertical = this._applyDeadzone(newValues[i + 1])
+            let oldHorizontal = this._applyDeadzone(oldValues[i])
+            let oldVertical = this._applyDeadzone(oldValues[i + 1])
             if (newHorizontal !== oldHorizontal || newVertical !== oldVertical) {
-                callbacks.forEach(callback => {
-                    return callback([newHorizontal, newVertical])
+                let axes = [i, i + 1]
+                let callListener = callback => callback(axes, [newHorizontal, newVertical])
+                callbackMap.forEach((callbacks, indices) => {
+                    if (axes.every((value, i) => value === indices[i])) {  // if array key is equal to indices array
+                        callbacks.forEach(callListener)  // specific listeners
+                    }
+                    if (indices === -1) {
+                        callbacks.forEach(callListener)  // non-specific listeners
+                    }
                 })
             }
-        })
+        }
     }
 
     _applyDeadzone(value) {
@@ -138,11 +147,11 @@ class Gamepad {
         for (let i = 0; i < newValues.length; i++) {
             if (predicate(newValues[i], oldValues[i])) {
                 let callListener = callback => passValue ? callback(i, newValues[i].value) : callback(i)
-                if (callbackMap.has(i)) {  // specific listeners
-                    callbackMap.get(i).forEach(callListener)
+                if (callbackMap.has(i)) {
+                    callbackMap.get(i).forEach(callListener)  // specific listeners
                 }
-                if (callbackMap.has(-1)) {  // non-specific listeners
-                    callbackMap.get(-1).forEach(callListener)
+                if (callbackMap.has(-1)) {
+                    callbackMap.get(-1).forEach(callListener)  // non-specific listeners
                 }
             }
         }
