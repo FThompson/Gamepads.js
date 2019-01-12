@@ -134,7 +134,7 @@ class Gamepad {
     }
 
     _applyDeadzone(value) {
-        return Math.abs(value) > this.deadzone ? value : 0
+        return Math.abs(value) > this.deadzone ? value - this.deadzone : 0
     }
 
     _compareButtons(newValues, oldValues) {
