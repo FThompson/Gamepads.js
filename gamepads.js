@@ -129,9 +129,9 @@ class Gamepad {
     }
 
     _compareButtons(newValues, oldValues) {
-        this._checkValues2(this.callbacks['buttonpress'], newValues, oldValues, (nv, ov) => nv.pressed && !ov.pressed)
-        this._checkValues2(this.callbacks['buttonrelease'], newValues, oldValues, (nv, ov) => !nv.pressed && ov.pressed)
-        this._checkValues2(this.callbacks['buttonaxischange'], newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
+        this._checkValues(this.callbacks['buttonpress'], newValues, oldValues, (nv, ov) => nv.pressed && !ov.pressed)
+        this._checkValues(this.callbacks['buttonrelease'], newValues, oldValues, (nv, ov) => !nv.pressed && ov.pressed)
+        this._checkValues(this.callbacks['buttonaxischange'], newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
     }
 
     _checkValues(callbackMap, newValues, oldValues, predicate, passValue) {
@@ -152,7 +152,7 @@ class Gamepad {
     // for buttonpress/buttonrelase, callback()
     // for buttonaxischange event, callback(value)
     // for joystickmove event, index [indexH, indexV] and callback(horizontal, vertical)
-    // TODO: reconsider, is index necessary here or should the button be passed to the callback?
+    // specify index to track only a specific button
     addEventListener(type, listener, index=-1) {
         if (!this.callbacks[type].has(index)) {
             this.callbacks[type].set(index, [])
@@ -160,9 +160,9 @@ class Gamepad {
         this.callbacks[type].get(index).push(listener)
     }
     
-    removeEventListener(type, listener, index) {
-        this.callbacks[type].get(index) = this.callbacks[type].get(index).filter(callback => callback !== listener)
-        // this.callbacks[type][index] = this.callbacks[type][index].filter(callback => callback !== listener)
+    removeEventListener(type, listener, index=-1) {
+        let filtered = this.callbacks[type].get(index).filter(callback => callback !== listener)
+        this.callbacks[type].set(index, filtered)
     }
 }
 
