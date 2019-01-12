@@ -13,12 +13,8 @@ import gamepads from './gamepads.js'
 
 gamepads.addEventListener('connect', (gamepad) => {
     console.log('gamepad connected')
-    gamepad.addEventListener('buttonpress', (i) => {
-        console.log(`${i} pressed`)
-    })
-    gamepad.addEventListener('joystickmove', (indices, values) => {
-        console.log(`${indices} is ${values}`
-    })
+    gamepad.addEventListener('buttonpress', (i) => console.log(`${i} pressed`))
+    gamepad.addEventListener('joystickmove', (indices, values) => console.log(`${indices} is ${values}`))
 })
 gamepads.addEventListener('disconnect', (gamepad) => {
     console.log('gamepad disconnected')
@@ -146,8 +142,11 @@ A dictionary object containing button/axis `index` values for the `standard` gam
 
 * The HTML5 Gamepad API may perform differently between browsers. Tested only on Ubuntu 18.10 with Chrome (71) and Firefox (64). Firefox considers XB1 triggers and D pad to be axes instead of buttons, and they are incorrectly picked up as `joystickmove` events. `StandardMapping` will also need to be updated to reflect this difference.
 * Tested only with an Xbox One controller. Many gamepads share the same standard layout and likely work without additional configuration, but non-standard gamepads will need to be mapped by users of this module.
+* Uses ES6 features, but the HTML5 Gamepad API is new itself so this module should not need to be compiled with Babel or similar.
 
 # TODO #
 
-* Haptic Actuator support. Currently an experimental API internally, so a different implementation may be required per browser engine.
+* Support additional browsers beyond Chrome.
 * Button mappings for common controllers
+* Haptic Actuator support. Currently an experimental API internally, so a different implementation may be required per browser engine.
+* Add a `gamepads.supported` flag to indicate that the Gamepad API is not supported by a browser.
