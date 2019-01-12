@@ -42,6 +42,7 @@ class GamepadHandler {
         // check if any tracked gamepads are now absent/disconnected from the browser's gamepads
         for (let index in this.gamepads) {
             if (!connectedIndices.includes(index)) {
+                this.gamepads[index]._last.connected = false
                 this.callbacks['disconnect'].forEach(callback => callback(this.gamepads[index]))
                 delete this.gamepads[index]
             }
@@ -120,7 +121,13 @@ class Gamepad {
     }
 
     isConnected() {
-        return this.gamepad.connected
+        // uses _last so the value can be set from gamepads 'disconnect' event
+        // necessary for browsers that do not automatically update gamepad values
+        return this._last.connected
+    }
+
+    getMapping() {
+        return this.gamepad.mapping
     }
 
     _checkDeadzone(deadzone) {

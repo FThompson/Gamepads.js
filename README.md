@@ -129,6 +129,30 @@ gamepad.update()
 Updates this gamepad's values and fires events if necessary.
 
 ```javascript
+gamepad.getButton(index)
+```
+
+Gets the button at the given `index`, in form `{ pressed: true/false, value: x }`.
+
+```javascript
+gamepad.getAxis(index)
+```
+
+Gets the floating point value of the axis at the given `index`.
+
+```javascript
+gamepad.isConnected()
+```
+
+Checks if this gamepad is connected.
+
+```javascript
+gamepad.getMapping()
+```
+
+Gets this gamepad's mapping from the internal gamepad object. This value will only be `'standard'` or `''` at time of writing.
+
+```javascript
 gamepad.setAxisDeadzone(index, deadzone)
 ```
 
@@ -165,3 +189,7 @@ A dictionary object containing button/axis `index` values for the `standard` gam
 * Button mappings for common controllers
 * Haptic Actuator support. Currently an experimental API internally, so a different implementation may be required per browser engine.
 * Add a `gamepads.supported` flag to indicate that the Gamepad API is not supported by a browser.
+
+# Own a gamepad? #
+
+With so many possible configurations of gamepads, browsers, and operating systems out there, I need help to verify support for various gamepad configurations. Please open issues or pull requests if you find any problems with this module or have any suggestions towards improving support.
