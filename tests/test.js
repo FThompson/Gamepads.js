@@ -6,9 +6,12 @@ gamepads.addEventListener('connect', (gamepad) => {
     console.log('gamepad connected')
     console.log(gamepad)
     myGamepad = gamepad
-    gamepad.addEventListener('buttonpress', pressed, StandardMapping.Button.BUTTON_TOP)
-    gamepad.addEventListener('buttonrelease', released, StandardMapping.Button.BUTTON_TOP)
-    gamepad.addEventListener('buttonaxischange', printValue, StandardMapping.Button.TRIGGER_RIGHT)
+    gamepad.addEventListener('buttonpress', (button) => console.log(`${button} pressed`))
+    gamepad.addEventListener('buttonrelease', (button) => console.log(`${button} released`))
+    gamepad.addEventListener('buttonaxischange', (button, value) => console.log(`${button} at ${value}`))
+    // gamepad.addEventListener('buttonpress', pressed, StandardMapping.Button.BUTTON_TOP)
+    // gamepad.addEventListener('buttonrelease', released, StandardMapping.Button.BUTTON_TOP)
+    // gamepad.addEventListener('buttonaxischange', printValue, StandardMapping.Button.TRIGGER_RIGHT)
     gamepad.addEventListener('joystickmove', printValue, StandardMapping.Axis.JOYSTICK_RIGHT)
 })
 gamepads.addEventListener('disconnect', (gamepad) => {

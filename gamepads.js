@@ -26,8 +26,16 @@ class GamepadHandler {
         let gamepads = navigator.getGamepads ? navigator.getGamepads() : []
         let connectedIndices = []
         for (let index in gamepads) {
-            if (index && gamepads[index] !== null) {
-                this._updateGamePad(gamepads[index])
+            let gamepad = gamepads[index]
+            if (index && gamepad !== null) {
+                if (gamepad.index !== undefined) {
+                    if (gamepad.index in this.gamepads) {
+                        this.gamepads[gamepad.index].update()
+                    } else {
+                        this.gamepads[gamepad.index] = new Gamepad(gamepad)
+                        this.callbacks['connect'].forEach(callback => callback(this.gamepads[gamepad.index]))
+                    }
+                }
                 connectedIndices.push(index)
             }
         }
@@ -51,20 +59,9 @@ class GamepadHandler {
     }
 
     _run() {
-        this.poll()
         if (!this.paused) {
+            this.poll()
             requestAnimationFrame(() => this._run(this))
-        }
-    }
-
-    _updateGamePad(gamepad) {
-        if (gamepad.index !== undefined) {
-            if (gamepad.index in this.gamepads) {
-                this.gamepads[gamepad.index].update()
-            } else {
-                this.gamepads[gamepad.index] = new Gamepad(gamepad)
-                this.callbacks['connect'].forEach(callback => callback(this.gamepads[gamepad.index]))
-            }
         }
     }
 }
@@ -121,7 +118,7 @@ class Gamepad {
             let oldVertical = this._applyDeadzone(oldValues[indices[1]])
             if (newHorizontal !== oldHorizontal || newVertical !== oldVertical) {
                 callbacks.forEach(callback => {
-                    return callback([newHorizontal, newVertical], [oldHorizontal, oldVertical])
+                    return callback([newHorizontal, newVertical])
                 })
             }
         })
@@ -131,22 +128,24 @@ class Gamepad {
         return Math.abs(value) > this.deadzone ? value : 0
     }
 
-    // TODO: optimization to avoid wrecking cpu at high poll rates
-    // currently iterating thru callbacks to supposedly save cpu for application with few callback needs
-    // should this iterate through buttons instead regardless of callbacks registered?
-    // or should Gamepad track separately which buttons have callbacks and only check those?
     _compareButtons(newValues, oldValues) {
-        this._checkValues(this.callbacks['buttonpress'], newValues, oldValues, (nv, ov) => nv.pressed && !ov.pressed)
-        this._checkValues(this.callbacks['buttonrelease'], newValues, oldValues, (nv, ov) => !nv.pressed && ov.pressed)
-        this._checkValues(this.callbacks['buttonaxischange'], newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
+        this._checkValues2(this.callbacks['buttonpress'], newValues, oldValues, (nv, ov) => nv.pressed && !ov.pressed)
+        this._checkValues2(this.callbacks['buttonrelease'], newValues, oldValues, (nv, ov) => !nv.pressed && ov.pressed)
+        this._checkValues2(this.callbacks['buttonaxischange'], newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
     }
 
     _checkValues(callbackMap, newValues, oldValues, predicate, passValue) {
-        callbackMap.forEach((callbacks, index) => {
-            if (predicate(newValues[index], oldValues[index])) {
-                callbacks.forEach(callback => passValue ? callback(newValues[index].value) : callback())
+        for (let i = 0; i < newValues.length; i++) {
+            if (predicate(newValues[i], oldValues[i])) {
+                let callListener = callback => passValue ? callback(i, newValues[i].value) : callback(i)
+                if (callbackMap.has(i)) {  // specific listeners
+                    callbackMap.get(i).forEach(callListener)
+                }
+                if (callbackMap.has(-1)) {  // non-specific listeners
+                    callbackMap.get(-1).forEach(callListener)
+                }
             }
-        })
+        }
     }
 
     // event types: buttonpress, buttonrelease, buttonaxischange, joystickmove
@@ -162,7 +161,7 @@ class Gamepad {
     }
     
     removeEventListener(type, listener, index) {
-        this.callbacks[type].delete(index)
+        this.callbacks[type].get(index) = this.callbacks[type].get(index).filter(callback => callback !== listener)
         // this.callbacks[type][index] = this.callbacks[type][index].filter(callback => callback !== listener)
     }
 }
