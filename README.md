@@ -151,14 +151,13 @@ The joystick deadzone to apply. Defaults to `0.10`. Must be set to range `[0, 1)
 
 ## `StandardMapping` dictionary ##
 
-A dictionary object containing button/axis `index` values for the `standard` gamepad mapping
-
-
+A dictionary object containing button/axis `index` values for the `standard` gamepad mapping.
 
 # Limitations #
 
 * The HTML5 Gamepad API may perform differently between browsers. Tested only on Ubuntu 18.10 with Chrome (71) and Firefox (64). One notable inconsistency is that Firefox considers XB1 triggers and D pad to be axes instead of buttons like Chrome , and does not consider the XB1 gamepad to be standard.
 * Tested only with an Xbox One controller. Many gamepads share the same standard layout and likely work without additional configuration, but non-standard gamepads (like the XB1 controller on Firefox) will need to be mapped by users of this module.
+* Browsers behave differently when detecting gamepads. In my tests, with Chrome the gamepad is detected automatically, but with Firefox the gamepad needs to be unplugged and plugged back in to be detected.
 * Uses ES6 features, but the HTML5 Gamepad API is new itself so this module should not need to be compiled with Babel or similar.
 
 # TODO #
