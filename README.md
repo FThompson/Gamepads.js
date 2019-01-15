@@ -1,4 +1,5 @@
-# HTML5 Gamepad API Enhancements
+# HTML5 Gamepad API Enhancements #
+[![](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
 A simple JavaScript module for tracking Gamepads and events pertaining to their usage.
 
