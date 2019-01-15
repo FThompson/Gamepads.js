@@ -2,6 +2,12 @@
 
 A simple JavaScript module for tracking Gamepads and events pertaining to their usage.
 
+Kindly hosted by jsDelivr: https://cdn.jsdelivr.net/gh/FThompson/Gamepads.js@1.0.1/gamepads.js
+
+```html
+<script src='https://cdn.jsdelivr.net/gh/FThompson/Gamepads.js@1.0.1/gamepads.js' type='text/javascript'>
+```
+
 ### Why use this library instead of the built-in Gamepad API?
 
 The [existing Gamepad standard](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API) lacks support for button/joystick events and `gamepadconnected`/`gamepaddisconnected` events do not work consistently across browsers. This module seeks to offer a standard event-handling implementation across multiple browsers.
@@ -9,8 +15,6 @@ The [existing Gamepad standard](https://developer.mozilla.org/en-US/docs/Web/API
 ## Example ##
 
 ```javascript
-import gamepads from './gamepads.js'
-
 gamepads.addEventListener('connect', (gamepad) => {
     console.log('gamepad connected')
     gamepad.addEventListener('buttonpress', (i) => console.log(`${i} pressed`))
@@ -27,10 +31,10 @@ gamepads.start()
 ## `GamepadHandler` object ##
 
 ```javascript
-import gamepads from `./gamepads.js`
+gamepads
 ```
 
-A `GamepadHandler` instance is the default export of this module (`import gamepads`). This object takes care of polling the HTML5 API for gamepads and tracking which gamepads are currently connected.
+A `GamepadHandler` singleton is exposed as `gamepads`. This object takes care of polling the HTML5 API for gamepads and tracking which gamepads are currently connected. Call `gamepads.start()` to begin polling.
 
 ### Methods ###
 
@@ -189,6 +193,7 @@ A dictionary object containing button/axis `index` values for the `standard` gam
 * Button mappings for common controllers
 * Haptic Actuator support. Currently an experimental API internally, so a different implementation may be required per browser engine.
 * Add a `gamepads.supported` flag to indicate that the Gamepad API is not supported by a browser.
+* Better joystick support. Maybe define a Joystick object which would automatically populated by any recognized/user-defined mapping (e.g. `StandardMapping` for standard gamepads).
 
 # Own a gamepad? #
 

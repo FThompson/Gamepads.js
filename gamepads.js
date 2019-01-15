@@ -235,7 +235,7 @@ class Gamepad {
     }
 }
 
-export const StandardMapping = {
+const StandardMapping = {
     Button: {
         BUTTON_BOTTOM: 0,
         BUTTON_RIGHT: 1,
@@ -268,4 +268,3 @@ export const StandardMapping = {
 }
 
 const gamepads = new GamepadHandler()
-export default gamepads;

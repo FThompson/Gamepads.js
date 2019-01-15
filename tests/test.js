@@ -1,5 +1,3 @@
-import gamepads, { StandardMapping } from '../gamepads.js'
-
 let myGamepad = null
 
 gamepads.addEventListener('connect', (gamepad) => {
