@@ -192,7 +192,7 @@ class Gamepad {
         this._checkButtons('buttonvaluechange', newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
     }
 
-    _checkButtons(eventType, newValues, oldValues, predicate, passValue) {
+    _checkButtons(eventType, newValues, oldValues, predicate) {
         let callbackMap = this._callbacks[eventType]
         for (let i = 0; i < newValues.length; i++) {
             if (predicate(newValues[i], oldValues[i])) {
