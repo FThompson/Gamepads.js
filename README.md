@@ -3,10 +3,10 @@
 
 A simple JavaScript module for tracking Gamepads and events pertaining to their usage.
 
-Kindly hosted by jsDelivr: https://cdn.jsdelivr.net/gh/FThompson/Gamepads.js@1.0.1/gamepads.js
+Kindly hosted by jsDelivr: https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.0.2/gamepads.js
 
 ```html
-<script src='https://cdn.jsdelivr.net/gh/FThompson/Gamepads.js@1.0.1/gamepads.js' type='text/javascript'>
+<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.0.2/gamepads.js' type='text/javascript'>
 ```
 
 ### Why use this library instead of the built-in Gamepad API?
