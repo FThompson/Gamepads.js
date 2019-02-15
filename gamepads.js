@@ -113,11 +113,11 @@ class Gamepad {
     }
 
     getButton(index) {
-        return this.gamepad.buttons[i]
+        return this.gamepad.buttons[index]
     }
 
     getAxis(index) {
-        return this.gamepad.axes[i]
+        return this.gamepad.axes[index]
     }
 
     isConnected() {
