@@ -33,7 +33,8 @@ class GamepadHandler {
                         this.gamepads[gamepad.index].update()
                     } else {
                         this.gamepads[gamepad.index] = new Gamepad(gamepad)
-                        this.callbacks['connect'].forEach(callback => callback(this.gamepads[gamepad.index]))
+                        let event = new GamepadConnectionEvent(this.gamepads[gamepad.index], 'connect')
+                        event.dispatch(this.callbacks['connect'])
                     }
                 }
                 connectedIndices.push(index)
@@ -43,7 +44,8 @@ class GamepadHandler {
         for (let index in this.gamepads) {
             if (!connectedIndices.includes(index)) {
                 this.gamepads[index]._last.connected = false
-                this.callbacks['disconnect'].forEach(callback => callback(this.gamepads[index]))
+                let event = new GamepadConnectionEvent(this.gamepads[index], 'disconnect')
+                event.dispatch(this.callbacks['disconnect'])
                 delete this.gamepads[index]
             }
         }
@@ -91,6 +93,10 @@ class Gamepad {
                     'value': this.gamepad.buttons[i].value
                 }
             })
+            // buttons: Object.keys(this.gamepad.buttons).map(i => ({
+            //     'pressed': this.gamepad.buttons[i].pressed,
+            //     'value': this.gamepad.buttons[i].value
+            // }))
         }
     }
 
@@ -145,23 +151,6 @@ class Gamepad {
         this._setLastValues()
     }
 
-    _compareAxes(newAxes, oldAxes) {
-        let callbackMap = this.callbacks['axischange']
-        for (let i = 0; i < newAxes.length; i++) {
-            let newValue = this._applyAxisDeadzone(newAxes[i], i)
-            let oldValue = this._applyAxisDeadzone(oldAxes[i], i)
-            if (newValue !== oldValue) {
-                let callListener = callback => callback(i, newAxes[i])
-                if (callbackMap.has(i)) {
-                    callbackMap.get(i).forEach(callListener)  // specific listeners
-                }
-                if (callbackMap.has(-1)) {
-                    callbackMap.get(-1).forEach(callListener)  // non-specific listeners
-                }
-            }
-        }
-    }
-
     _compareJoysticks(newAxes, oldAxes) {
         this.callbacks['joystickmove'].forEach((callbacks, indices) => {
             let newHorizontal = this._applyJoystickDeadzone(newAxes[indices[0]])
@@ -169,9 +158,8 @@ class Gamepad {
             let oldHorizontal = this._applyJoystickDeadzone(oldAxes[indices[0]])
             let oldVertical = this._applyJoystickDeadzone(oldAxes[indices[1]])
             if (newHorizontal !== oldHorizontal || newVertical !== oldVertical) {
-                callbacks.forEach(callback => {
-                    return callback(indices, [newHorizontal, newVertical])
-                })
+                let event = new GamepadJoystickEvent(this, 'joystickmove', indices, [newHorizontal, newVertical])
+                event.dispatch(callbacks)
             }
         })
     }
@@ -188,23 +176,40 @@ class Gamepad {
         return Math.abs(value) > deadzone ? value - Math.sign(value) * deadzone : 0
     }
 
-    _compareButtons(newValues, oldValues) {
-        this._checkButtons(this.callbacks['buttonpress'], newValues, oldValues, (nv, ov) => nv.pressed && !ov.pressed)
-        this._checkButtons(this.callbacks['buttonrelease'], newValues, oldValues, (nv, ov) => !nv.pressed && ov.pressed)
-        this._checkButtons(this.callbacks['buttonvaluechange'], newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
+    _compareAxes(newAxes, oldAxes) {
+        let callbackMap = this.callbacks['axischange']
+        for (let i = 0; i < newAxes.length; i++) {
+            let newValue = this._applyAxisDeadzone(newAxes[i], i)
+            let oldValue = this._applyAxisDeadzone(oldAxes[i], i)
+            if (newValue !== oldValue) {
+                let event = new GamepadValueEvent(this, 'axischange', i, newAxes[i])
+                this._dispatchEvent(event, callbackMap, i)
+            }
+        }
     }
 
-    _checkButtons(callbackMap, newValues, oldValues, predicate, passValue) {
+    _compareButtons(newValues, oldValues) {
+        this._checkButtons('buttonpress', newValues, oldValues, (nv, ov) => nv.pressed && !ov.pressed)
+        this._checkButtons('buttonrelease', newValues, oldValues, (nv, ov) => !nv.pressed && ov.pressed)
+        this._checkButtons('buttonvaluechange', newValues, oldValues, (nv, ov) => nv.value !== ov.value, true)
+    }
+
+    _checkButtons(eventType, newValues, oldValues, predicate, passValue) {
+        let callbackMap = this.callbacks[eventType]
         for (let i = 0; i < newValues.length; i++) {
             if (predicate(newValues[i], oldValues[i])) {
-                let callListener = callback => passValue ? callback(i, newValues[i].value) : callback(i)
-                if (callbackMap.has(i)) {
-                    callbackMap.get(i).forEach(callListener)  // specific listeners
-                }
-                if (callbackMap.has(-1)) {
-                    callbackMap.get(-1).forEach(callListener)  // non-specific listeners
-                }
+                let event = new GamepadValueEvent(this, eventType, i, newValues[i].value)
+                this._dispatchEvent(event, callbackMap, i)
             }
+        }
+    }
+
+    _dispatchEvent(event, callbackMap, index) {
+        if (callbackMap.has(index)) { // specific listeners
+            event.dispatch(callbackMap.get(index))
+        }
+        if (callbackMap.has(-1)) { // non-specific listeners
+            event.dispatch(callbackMap.get(-1))
         }
     }
 
@@ -235,6 +240,52 @@ class Gamepad {
     }
 }
 
+// avoid naming collision with DOM GamepadEvent
+class _GamepadEvent {
+    constructor(gamepad, type) {
+        this.gamepad = gamepad
+        this.type = type.toLowerCase()
+        this._consumed = false
+    }
+
+    consume() {
+        this._consumed = true
+    }
+
+    isConsumed() {
+        return this._consumed
+    }
+
+    dispatch(listeners) {
+        for (let i = 0; i < listeners.length && !this.isConsumed(); i++) {
+            listeners[i](this)
+        }
+    }
+}
+
+class GamepadConnectionEvent extends _GamepadEvent {
+    constructor(gamepad, type) {
+        super(gamepad, type)
+    }
+}
+
+class GamepadValueEvent extends _GamepadEvent {
+    constructor(gamepad, type, index, value) {
+        super(gamepad, type)
+        this.index = index
+        this.value = value
+    }
+}
+
+class GamepadJoystickEvent extends _GamepadEvent {
+    constructor(gamepad, type, indices, values) {
+        super(gamepad, type)
+        this.indices = indices
+        this.values = values
+    }
+}
+
+// TODO: additional mappings with button names and images in gamepad-mappings.js
 const StandardMapping = {
     Button: {
         BUTTON_BOTTOM: 0,

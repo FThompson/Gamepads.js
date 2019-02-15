@@ -1,22 +1,23 @@
 let myGamepad = null
 
-gamepads.addEventListener('connect', (gamepad) => {
+gamepads.addEventListener('connect', event => {
+    let gamepad = event.gamepad
     console.log('gamepad connected')
     console.log(gamepad)
     gamepad.addEventListener('buttonpress', printPressed)
     gamepad.addEventListener('buttonrelease', printReleased)
     gamepad.addEventListener('buttonvaluechange', printButtonValue)
     gamepad.addEventListener('axischange', printAxisValue)
-    // gamepad.addEventListener('buttonpress', printYPressed, StandardMapping.Button.BUTTON_TOP)
-    // gamepad.addEventListener('buttonrelease', printYReleased, StandardMapping.Button.BUTTON_TOP)
-    // gamepad.addEventListener('buttonvaluechange', printLTValue, StandardMapping.Button.TRIGGER_RIGHT)
+    gamepad.addEventListener('buttonpress', printYPressed, StandardMapping.Button.BUTTON_TOP)
+    gamepad.addEventListener('buttonrelease', printYReleased, StandardMapping.Button.BUTTON_TOP)
+    gamepad.addEventListener('buttonvaluechange', printLTValue, StandardMapping.Button.TRIGGER_RIGHT)
     gamepad.addEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_LEFT)
     gamepad.addEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_RIGHT)
     myGamepad = gamepad
 })
-gamepads.addEventListener('disconnect', (gamepad) => {
+gamepads.addEventListener('disconnect', event => {
     console.log('gamepad disconnected')
-    console.log(gamepad)
+    console.log(event.gamepad)
 })
 gamepads.start()
 
@@ -26,9 +27,9 @@ window.addEventListener('load', () => {
         myGamepad.removeEventListener('buttonrelease', printReleased)
         myGamepad.removeEventListener('buttonvaluechange', printButtonValue)
         myGamepad.removeEventListener('axischange', printAxisValue)
-        // myGamepad.removeEventListener('buttonpress', printYPressed, StandardMapping.Button.BUTTON_TOP)
-        // myGamepad.removeEventListener('buttonrelease', printYReleased, StandardMapping.Button.BUTTON_TOP)
-        // myGamepad.removeEventListener('buttonvaluechange', printLTValue, StandardMapping.Button.TRIGGER_RIGHT)
+        myGamepad.removeEventListener('buttonpress', printYPressed, StandardMapping.Button.BUTTON_TOP)
+        myGamepad.removeEventListener('buttonrelease', printYReleased, StandardMapping.Button.BUTTON_TOP)
+        myGamepad.removeEventListener('buttonvaluechange', printLTValue, StandardMapping.Button.TRIGGER_RIGHT)
         myGamepad.removeEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_LEFT)
         myGamepad.removeEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_RIGHT)
         console.log(myGamepad)
@@ -44,38 +45,41 @@ window.addEventListener('load', () => {
     })
 })
 
-function printPressed(i) {
-    console.log(`${i} pressed`)
+function printPressed(e) {
+    console.log(`${e.index} pressed`)
 }
 
-function printReleased(i) {
-    console.log(`${i} released`)
+function printReleased(e) {
+    console.log(`${e.index} released`)
 }
 
-function printButtonValue(i, value) {
-    console.log(`button axis ${i} is ${value}`)
+function printButtonValue(e) {
+    console.log(`button axis ${e.index} is ${e.value}`)
 }
 
-function printAxisValue(i, value) {
-    console.log(`axis ${i} is ${value}`)
+function printAxisValue(e) {
+    console.log(`axis ${e.index} is ${e.value}`)
 }
 
-function printJoystick(i, values) {
-    console.log(`Joystick [${i[0]}, ${i[1]}] is [${values[0]}, ${values[1]}]`)
+function printJoystick(e) {
+    console.log(`Joystick [${e.indices[0]}, ${e.indices[1]}] is [${e.values[0]}, ${e.values[1]}]`)
 }
 
-function printYPressed(i) {
+function printYPressed(e) {
     console.log('pressed Y button')
+    e.consume()
 }
 
-function printYReleased(i) {
+function printYReleased(e) {
     console.log('released Y button')
+    e.consume()
 }
 
-function printLTValue(i, value) {
-    console.log(`LT is ${value}`)
+function printLTValue(e) {
+    console.log(`LT     is ${e.value}`)
+    e.consume()
 }
 
-function printRightJoystick(i, values) {
-    console.log(`RS is ${values[0]}, ${values[1]}`)
+function printRightJoystick(e) {
+    console.log(`RS is ${e.values[0]}, ${e.values[1]}`)
 }
