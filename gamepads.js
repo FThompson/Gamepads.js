@@ -9,7 +9,16 @@ class GamepadHandler {
             'connect': [],
             'disconnect': []
         }
+        this._supported = navigator.getGamepads !== undefined
         GamepadHandler._instance = this
+    }
+
+    get paused() {
+        return this._paused
+    }
+
+    get supported() {
+        return this._supported
     }
 
     start() {
@@ -19,10 +28,6 @@ class GamepadHandler {
 
     stop() {
         this._paused = true
-    }
-
-    get paused() {
-        return this._paused
     }
 
     poll() {
@@ -66,7 +71,7 @@ class GamepadHandler {
     }
 
     _run() {
-        if (!this._paused) {
+        if (this._supported && !this._paused) {
             this.poll()
             requestAnimationFrame(() => this._run(this))
         }

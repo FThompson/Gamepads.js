@@ -91,6 +91,12 @@ gamepads.paused
 
 Read-only property indicating whether or not polling is paused.
 
+```javascript
+gamepads.supported
+```
+
+Read-only property indicating whether or not the current browser supports the gamepads API.
+
 ## `Gamepad` object ##
 
 Retrieve `Gamepad` instances via `GamepadHandler`'s `connect`/`disconnect` events or `GamepadHandler.gamepads`.
@@ -243,7 +249,6 @@ A dictionary object containing button/axis `index` values for the `standard` gam
 
 * Button mappings for common controllers, including button images for each.
 * Haptic Actuator support. Currently an experimental API internally, so a different implementation may be required per browser engine.
-* Add a `gamepads.supported` flag to indicate that the Gamepad API is not supported by a browser.
 * Better joystick support. Maybe rewrite `GamepadJoystickEvent` to have horizontal/vertical specifiers for each axis index/value. Maybe define a Joystick object which would automatically populated by any recognized/user-defined mapping (e.g. `StandardMapping` for standard gamepads).
 
 # Own a gamepad? #
