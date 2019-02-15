@@ -85,6 +85,12 @@ gamepads.gamepads
 
 The map of all connected `Gamepad` objects `{ index: gamepad }`.
 
+```javascript
+gamepads.paused
+```
+
+Read-only property indicating whether or not polling is paused.
+
 ## `Gamepad` object ##
 
 Retrieve `Gamepad` instances via `GamepadHandler`'s `connect`/`disconnect` events or `GamepadHandler.gamepads`.
@@ -227,16 +233,18 @@ A dictionary object containing button/axis `index` values for the `standard` gam
 # Limitations #
 
 * The HTML5 Gamepad API may perform differently between browsers. Tested on Ubuntu 18.10 with Chrome (71) and Firefox (64); Windows 10 with Chrome (71), Firefox (64), and Edge (44). The Xbox One controller appears with a standard mapping on each of these configurations *except* Firefox on Ubuntu, where the triggers and D-pad are axes instead of buttons.
+* Edge notably responds to gamepad input itself (e.g. pressing B causes the page to go back) and there doesn't appear to be a way to disable this behavior, so I recommend avoiding the use of Edge with HTML5 gamepads.
 * Tested only with an Xbox One controller. Many gamepads share the same standard layout and likely work without additional configuration, but non-standard gamepads (like the XB1 controller on Firefox) will need to be mapped separately.
+* Gamepad ids are unreliable inconsistent across browsers/OSes for identifying gamepad models. For example, a wired Xbox One controller appears as an Xbox 360 controller in Chrome/Firefox/Edge on Windows 10 while the same controller appears correctly as an Xbox One controller in Chrome on Ubuntu.
 * Browsers behave differently when detecting gamepads. In my tests on Ubuntu, with Chrome the gamepad is detected automatically, but with Firefox the gamepad sometimes needs to be unplugged and plugged back in to be detected. Sometimes, you must press a button for the gamepad to be recognized for the first time.
 * Uses ES6 features, but the HTML5 Gamepad API is new itself so this module should not need to be compiled with Babel or similar.
 
 # TODO #
 
-* Button mappings for common controllers
+* Button mappings for common controllers, including button images for each.
 * Haptic Actuator support. Currently an experimental API internally, so a different implementation may be required per browser engine.
 * Add a `gamepads.supported` flag to indicate that the Gamepad API is not supported by a browser.
-* Better joystick support. Maybe define a Joystick object which would automatically populated by any recognized/user-defined mapping (e.g. `StandardMapping` for standard gamepads).
+* Better joystick support. Maybe rewrite `GamepadJoystickEvent` to have horizontal/vertical specifiers for each axis index/value. Maybe define a Joystick object which would automatically populated by any recognized/user-defined mapping (e.g. `StandardMapping` for standard gamepads).
 
 # Own a gamepad? #
 
