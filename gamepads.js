@@ -209,10 +209,10 @@ class Gamepad {
 
     _dispatchEvent(event, callbackMap, index) {
         if (callbackMap.has(index)) { // specific listeners
-            event.dispatch(callbackMap.get(index))
+            event._dispatch(callbackMap.get(index))
         }
         if (callbackMap.has(-1)) { // non-specific listeners
-            event.dispatch(callbackMap.get(-1))
+            event._dispatch(callbackMap.get(-1))
         }
     }
 

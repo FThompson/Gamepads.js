@@ -4,6 +4,8 @@ gamepads.addEventListener('connect', event => {
     let gamepad = event.gamepad
     console.log('gamepad connected')
     console.log(gamepad)
+    gamepad.addEventListener('buttonpress', showPressedButton)
+    gamepad.addEventListener('buttonrelease', removePressedButton)
     gamepad.addEventListener('buttonpress', printPressed)
     gamepad.addEventListener('buttonrelease', printReleased)
     gamepad.addEventListener('buttonvaluechange', printButtonValue)
@@ -32,6 +34,8 @@ window.addEventListener('load', () => {
         myGamepad.removeEventListener('buttonvaluechange', printLTValue, StandardMapping.Button.TRIGGER_RIGHT)
         myGamepad.removeEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_LEFT)
         myGamepad.removeEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_RIGHT)
+        myGamepad.removeEventListener('buttonpress', showPressedButton)
+        myGamepad.removeEventListener('buttonrelease', removePressedButton)
         console.log(myGamepad)
     })
     document.getElementById('c').addEventListener('click', () => {
@@ -44,6 +48,24 @@ window.addEventListener('load', () => {
         gamepads.start()
     })
 })
+
+function showPressedButton(e) {
+    let button = mappings.getButton('Xbox One', e.index)
+    if (button) {
+        let img = document.createElement('img')
+        img.src = button.buttonImageUrl
+        img.alt = button.buttonName
+        img.setAttribute('buttonIndex', e.index)
+        document.getElementById('pressedButtons').append(img)
+    }
+}
+
+function removePressedButton(e) {
+    let img = document.querySelector('#pressedButtons img[buttonIndex="' + e.index + '"]')
+    if (img) {
+        img.parentNode.removeChild(img)
+    }
+}
 
 function printPressed(e) {
     console.log(`${e.index} pressed`)
@@ -76,7 +98,7 @@ function printYReleased(e) {
 }
 
 function printLTValue(e) {
-    console.log(`LT     is ${e.value}`)
+    console.log(`LT is ${e.value}`)
     e.consume()
 }
 

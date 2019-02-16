@@ -3,12 +3,16 @@
     <head>
         <title>Gamepad Test</title>
         <script src='../gamepads.js' type='text/javascript'></script>
+        <script src='../gamepad-mappings.js' type='text/javascript'></script>
         <script src='test.js' type='text/javascript'></script>
     </head>
     <body>
-        <button id='r'>Remove Listener</button>
-        <button id='c'>Print gamepads</button>
-        <button id='p'>Pause</button>
-        <button id='s'>Start</button>
+        <div>
+            <button id='r'>Remove Listener</button>
+            <button id='c'>Print gamepads</button>
+            <button id='p'>Pause</button>
+            <button id='s'>Start</button>
+        </div>
+        <div id='pressedButtons'></div>
     </body>
 </html>

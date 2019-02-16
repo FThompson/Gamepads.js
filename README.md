@@ -240,6 +240,56 @@ The joystick deadzone to apply. Defaults to `0.10`. Must be set to range `[0, 1)
 
 A dictionary object containing button/axis `index` values for the `standard` gamepad mapping.
 
+# Gamepad Mappings Extension #
+
+An extension containing gamepad mappings and their corresponding button images. This module is shipped separately from the core `gamepads.js` due to its size and can be downloaded via `gamepad-mappings.js.zip` in the Releases tab.
+
+Gamepad button icon assets courtesy of [Nicolae Berbece "Xelu"](https://opengameart.org/content/free-keyboard-and-controllers-prompts-pack) and are released in the public domain under Creative Commons 0 (CC0).
+
+```html
+<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.0.2/gamepad-mappings.js' type='text/javascript'>
+```
+
+# Usage #
+
+## `GamepadMappingHandler` object ##
+
+```javascript
+gamepadMappings
+```
+
+A `GamepadMappingHandler` singleton is exposed as `gamepadMappings`. This object takes care of querying supported gamepad mappings.
+
+### Methods ###
+
+```javascript
+gamepadMappings.getButton(mappingName, index)
+```
+
+Gets the given mapping's button at the given index. Returns an object containing `mappingName` (e.g. `'Xbox One'`), `buttonName` (e.g. `'Y'`), and `buttonImageUrl`.
+
+Currently supported mappings:
+* Xbox 360*
+* Xbox One
+* PS3*
+* PS4*
+
+<sub>* Untested mapping</sub>
+
+### Properties ###
+
+```javascript
+gamepadMappings.buttonsPath
+```
+
+The root path to find button images in. Change this property if you wish to store button image assets somewhere other than as a sibling to `gamepad-mappings.js`. Defaults to `/buttons`.
+
+```javascript
+gamepadMappings.mappings
+```
+
+A dictionary of all supported mappings.
+
 # Limitations #
 
 * The HTML5 Gamepad API may perform differently between browsers. Tested on Ubuntu 18.10 with Chrome (71) and Firefox (64); Windows 10 with Chrome (71), Firefox (64), and Edge (44). The Xbox One controller appears with a standard mapping on each of these configurations *except* Firefox on Ubuntu, where the triggers and D-pad are axes instead of buttons.
