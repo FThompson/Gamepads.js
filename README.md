@@ -43,6 +43,8 @@ gamepads.addEventListener(type, callback)
 
 Adds an event listener to the page's gamepad handler.
 
+Event listeners are called in order of most recently added.
+
 ```javascript
 gamepads.removeEventListener(type, callback)
 ```
@@ -108,6 +110,8 @@ gamepad.addEventListener(type, callback[, index])
 ```
 
 Adds an event listener to this gamepad. If `index` is supplied, the listener will apply only to events for the button at that index. In the case of `'joystickmove'` events, a two-item array must be passed to `index` to handle two-axis joysticks.
+
+Event listeners are called in order of most recently added.
 
 ```javascript
 gamepad.removeEventListener(type, callback[, index])
@@ -188,7 +192,7 @@ gamepad.joystickDeadzone
 
 The joystick deadzone to apply. Defaults to `0.10`. Must be set to range `[0, 1)`.
 
-## Event Interfaces ##
+## Event Objects ##
 
 * `_GamepadEvent` class. Underscore in name used to avoid collision with DOM's built-in [`GamepadEvent`](https://developer.mozilla.org/en-US/docs/Web/API/GamepadEvent/GamepadEvent).
   * `gamepad`

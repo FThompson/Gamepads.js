@@ -43,7 +43,7 @@ class GamepadHandler {
                     } else {
                         this.gamepads[gamepad.index] = new Gamepad(gamepad)
                         let event = new GamepadConnectionEvent(this.gamepads[gamepad.index], 'connect')
-                        event.dispatch(this._callbacks['connect'])
+                        event._dispatch(this._callbacks['connect'])
                     }
                 }
                 connectedIndices.push(index)
@@ -54,7 +54,7 @@ class GamepadHandler {
             if (!connectedIndices.includes(index)) {
                 this.gamepads[index]._last.connected = false
                 let event = new GamepadConnectionEvent(this.gamepads[index], 'disconnect')
-                event.dispatch(this._callbacks['disconnect'])
+                event._dispatch(this._callbacks['disconnect'])
                 delete this.gamepads[index]
             }
         }
@@ -162,7 +162,7 @@ class Gamepad {
             let oldVertical = this._applyJoystickDeadzone(oldAxes[indices[1]])
             if (newHorizontal !== oldHorizontal || newVertical !== oldVertical) {
                 let event = new GamepadJoystickEvent(this, 'joystickmove', indices, [newHorizontal, newVertical])
-                event.dispatch(callbacks)
+                event._dispatch(callbacks)
             }
         })
     }
@@ -256,7 +256,7 @@ class _GamepadEvent {
         return this._consumed
     }
 
-    dispatch(listeners) {
+    _dispatch(listeners) {
         for (let i = 0; i < listeners.length && !this.isConsumed(); i++) {
             listeners[i](this)
         }
