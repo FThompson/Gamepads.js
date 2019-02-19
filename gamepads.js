@@ -81,7 +81,7 @@ class GamepadHandler {
 class Gamepad {
     constructor(gamepad) {
         this.gamepad = gamepad
-        this._callbacks = {  // map required for array keys on joystick, used for convenience elsewhere
+        this._callbacks = {  // map required for array keys on joystickmove, used for convenience elsewhere
             'buttonpress': new Map(),
             'buttonrelease': new Map(),
             'buttonvaluechange': new Map(),
@@ -161,7 +161,8 @@ class Gamepad {
             let oldHorizontal = this._applyJoystickDeadzone(oldAxes[indices[0]])
             let oldVertical = this._applyJoystickDeadzone(oldAxes[indices[1]])
             if (newHorizontal !== oldHorizontal || newVertical !== oldVertical) {
-                let event = new GamepadJoystickEvent(this, 'joystickmove', indices, [newHorizontal, newVertical])
+                let event = new GamepadJoystickEvent(this, 'joystickmove', indices[0], indices[1], newHorizontal,
+                                                     newVertical)
                 event._dispatch(callbacks)
             }
         })
@@ -278,10 +279,12 @@ class GamepadValueEvent extends _GamepadEvent {
 }
 
 class GamepadJoystickEvent extends _GamepadEvent {
-    constructor(gamepad, type, indices, values) {
+    constructor(gamepad, type, hIndex, vIndex, hValue, vValue) {
         super(gamepad, type)
-        this.indices = indices
-        this.values = values
+        this.horizontalIndex = hIndex
+        this.verticalIndex = vIndex
+        this.horizontalValue = hValue
+        this.verticalValue = vValue
     }
 }
 

@@ -139,7 +139,7 @@ Removes an event listener from this gamepad. If `index` is supplied, the listene
 
 * `type 'joystickmove': GamepadJoystickEvent`
 
-   Fires when a joystick moves outside of the gamepad's deadzone and passes the axis `indices` and axis `values`. Values have the deadzone subtracted from them to create a smoother feel. To use this event, users must specify in `addEventListener` the pair of axis indices corresponding to the joystick's axes.
+   Fires when a joystick moves outside of the gamepad's deadzone and passes the axis indices (`horizontalIndex`, `verticalIndex`) and axis values (`horizontalValue`, `verticalValue`). Values have the deadzone subtracted from them to create a smoother feel. To use this event, users must specify in `addEventListener` the pair of axis indices corresponding to the joystick's axes.
 
 ```javascript
 gamepad.update()
@@ -228,13 +228,21 @@ The joystick deadzone to apply. Defaults to `0.10`. Must be set to range `[0, 1)
 
    Represents a gamepad joystick change.
 
-   * `indices`
+   * `horizontalIndex`
 
-      The indices of the two joystick axes.
+     The index of the horizontal axis.
 
-   * `values`
-   
-      The values of the two joystick axes.
+   * `verticalIndex`
+
+     The index of the vertical axis.
+
+   * `horizontalValue`
+
+     The value of the horizontal axis.
+
+   * `verticalValue`
+
+     The value of the vertical axis.
 
 ## `StandardMapping` dictionary ##
 
