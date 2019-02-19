@@ -3,10 +3,10 @@
 
 A simple JavaScript module for tracking Gamepads and events pertaining to their usage.
 
-Kindly hosted by jsDelivr: https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.0.2/gamepads.js
+Kindly hosted by jsDelivr: https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.1.0/gamepads.js
 
 ```html
-<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.0.2/gamepads.js' type='text/javascript'>
+<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.1.0/gamepads.js' type='text/javascript'>
 ```
 
 ### Why use this library instead of the built-in Gamepad API?
@@ -267,7 +267,7 @@ An extension containing gamepad mappings and their corresponding button images. 
 Gamepad button icon assets courtesy of [Nicolae Berbece "Xelu"](https://opengameart.org/content/free-keyboard-and-controllers-prompts-pack) and are released in the public domain under Creative Commons 0 (CC0).
 
 ```html
-<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.0.2/gamepad-mappings.js' type='text/javascript'>
+<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.1.0/gamepad-mappings.js' type='text/javascript'>
 ```
 
 # Usage #
