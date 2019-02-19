@@ -286,7 +286,7 @@ A `GamepadMappingHandler` singleton is exposed as `gamepadMappings`. This object
 gamepadMappings.getButton(mappingName, index)
 ```
 
-Gets the given mapping's button at the given index. Returns an object containing `mappingName` (e.g. `'Xbox One'`), `buttonName` (e.g. `'Y'`), and `buttonImageUrl`.
+Gets the given mapping's button at the given index. Returns an object containing `mappingName` (e.g. `'Xbox One'`), `buttonName` (e.g. `'Y'`), and `buttonImageSrc`.
 
 Currently supported mappings:
 * Xbox 360*
