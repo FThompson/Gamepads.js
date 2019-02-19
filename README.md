@@ -109,9 +109,9 @@ Retrieve `Gamepad` instances via `GamepadHandler`'s `connect`/`disconnect` event
 gamepad.addEventListener(type, callback[, index])
 ```
 
-Adds an event listener to this gamepad. If `index` is supplied, the listener will apply only to events for the button at that index. In the case of `'joystickmove'` events, a two-item array must be passed to `index` to handle two-axis joysticks.
+Adds an event listener to this gamepad. If `index` is supplied, the listener will apply only to events for the button at that index; otherwise (default value `-1`) the listener will apply to all buttons or axes. In the case of `'joystickmove'` events, a two-item array must be passed to `index` to handle two-axis joysticks.
 
-Event listeners are called in order of most recently added.
+Indexed event listeners are called before unindexed event listeners. After that, event listeners are called in order of most recently added.
 
 ```javascript
 gamepad.removeEventListener(type, callback[, index])
@@ -274,7 +274,7 @@ Currently supported mappings:
 * PS3*
 * PS4*
 
-<sub>* Untested mapping</sub>
+<sub>* Untested mapping. Feedback much appreciated.</sub>
 
 ### Properties ###
 
@@ -301,7 +301,7 @@ A dictionary of all supported mappings.
 
 # TODO #
 
-* Button mappings for common controllers, including button images for each.
+* Additional button image icon mapping and testing the untested mappings.
 * Haptic Actuator support. Currently an experimental API internally, so a different implementation may be required per browser engine.
 * Better joystick support. Maybe rewrite `GamepadJoystickEvent` to have horizontal/vertical specifiers for each axis index/value. Maybe define a Joystick object which would automatically populated by any recognized/user-defined mapping (e.g. `StandardMapping` for standard gamepads).
 

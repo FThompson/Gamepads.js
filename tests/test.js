@@ -16,6 +16,7 @@ gamepads.addEventListener('connect', event => {
     gamepad.addEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_LEFT)
     gamepad.addEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_RIGHT)
     myGamepad = gamepad
+    console.log(myGamepad._callbacks)
 })
 gamepads.addEventListener('disconnect', event => {
     console.log('gamepad disconnected')
@@ -50,7 +51,7 @@ window.addEventListener('load', () => {
 })
 
 function showPressedButton(e) {
-    let button = mappings.getButton('Xbox One', e.index)
+    let button = gamepadMappings.getButton('Xbox One', e.index)
     if (button) {
         let img = document.createElement('img')
         img.src = button.buttonImageUrl
