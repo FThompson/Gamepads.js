@@ -85,7 +85,7 @@ function printAxisValue(e) {
 }
 
 function printJoystick(e) {
-    console.log(`Joystick [${e.horizontalIndex}, ${e.verticalIndex}] is [${e.horizontalValue}, ${e.verticalValue}]`)
+    console.log(`Joystick [${e.indices[0]}, ${e.indices[1]}] is [${e.values[0]}, ${e.values[1]}]`)
 }
 
 function printYPressed(e) {

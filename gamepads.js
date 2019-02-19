@@ -289,6 +289,8 @@ class GamepadValueEvent extends _GamepadEvent {
 class GamepadJoystickEvent extends _GamepadEvent {
     constructor(gamepad, type, hIndex, vIndex, hValue, vValue) {
         super(gamepad, type)
+        this.indices = [hIndex, vIndex]
+        this.values = [hValue, vValue]
         this.horizontalIndex = hIndex
         this.verticalIndex = vIndex
         this.horizontalValue = hValue
