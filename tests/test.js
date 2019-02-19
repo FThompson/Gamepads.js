@@ -54,7 +54,7 @@ function showPressedButton(e) {
     let button = gamepadMappings.getButton('Xbox One', e.index)
     if (button) {
         let img = document.createElement('img')
-        img.src = button.buttonImageUrl
+        img.src = button.buttonImageSrc
         img.alt = button.buttonName
         img.setAttribute('buttonIndex', e.index)
         document.getElementById('pressedButtons').append(img)

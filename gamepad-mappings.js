@@ -49,10 +49,10 @@ const ALL_MAPPINGS = [ PS3Mapping, PS4Mapping, Xbox360Mapping, XboxOneMapping ]
 
 // avoid naming collision with DOM's GamepadButton
 class _GamepadButton {
-    constructor(mappingName, buttonName, buttonImageUrl) {
+    constructor(mappingName, buttonName, buttonImageSrc) {
         this.mappingName = mappingName
         this.buttonName = buttonName
-        this.buttonImageUrl = buttonImageUrl
+        this.buttonImageSrc = buttonImageSrc
     }
 }
 
@@ -73,8 +73,8 @@ class GamepadMappingHandler {
         if (mappingName in this.mappings && index in this.mappings[mappingName].buttons) {
             let buttonName = this.mappings[mappingName].buttons[index]
             let buttonImageFile = this.mappings[mappingName].filePrefix + buttonName + '.png'
-            let buttonImageUrl = this.buttonsPath + '/' + mappingName + '/' + buttonImageFile
-            return new _GamepadButton(mappingName, buttonName, buttonImageUrl)
+            let buttonImageSrc = this.buttonsPath + '/' + mappingName + '/' + buttonImageFile
+            return new _GamepadButton(mappingName, buttonName, buttonImageSrc)
         }
         return null
     }
