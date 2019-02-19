@@ -13,7 +13,7 @@ gamepads.addEventListener('connect', event => {
     gamepad.addEventListener('buttonpress', printYPressed, StandardMapping.Button.BUTTON_TOP)
     gamepad.addEventListener('buttonrelease', printYReleased, StandardMapping.Button.BUTTON_TOP)
     gamepad.addEventListener('buttonvaluechange', printLTValue, StandardMapping.Button.TRIGGER_RIGHT)
-    gamepad.addEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_LEFT)
+    gamepad.addJoystickEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_LEFT)
     gamepad.addEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_RIGHT)
     myGamepad = gamepad
     console.log(myGamepad._callbacks)
@@ -36,7 +36,7 @@ window.addEventListener('load', () => {
         myGamepad.removeEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_LEFT)
         myGamepad.removeEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_RIGHT)
         myGamepad.removeEventListener('buttonpress', showPressedButton)
-        myGamepad.removeEventListener('buttonrelease', removePressedButton)
+        myGamepad.removeJoystickEventListener('buttonrelease', removePressedButton)
         console.log(myGamepad)
     })
     document.getElementById('c').addEventListener('click', () => {

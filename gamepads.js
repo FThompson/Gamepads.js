@@ -239,6 +239,14 @@ class Gamepad {
             throw new Error('joystickmove events require a two-length index array')
         }
     }
+
+    addJoystickEventListener(type, listener, horizontalIndex, verticalIndex) {
+        this.addEventListener(type, listener, [horizontalIndex, verticalIndex])
+    }
+
+    removeJoystickEventListener(type, listener, horizontalIndex, verticalIndex) {
+        this.removeEventListener(type, listener, [horizontalIndex, verticalIndex])
+    }
 }
 
 // avoid naming collision with DOM GamepadEvent

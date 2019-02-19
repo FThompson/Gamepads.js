@@ -119,6 +119,18 @@ gamepad.removeEventListener(type, callback[, index])
 
 Removes an event listener from this gamepad. If `index` is supplied, the listener will only be removed from the button at that index. In the case of `'joystickmove'` events, a two-item array must be passed to `index` to handle two-axis joysticks.
 
+```javascript
+gamepad.addJoystickEventListener(type, callback, horizontalIndex, verticalIndex)
+```
+
+Convenience method for adding joystick event listeners.
+
+```javascript
+gamepad.removeJoystickEventListener(type, callback, horizontalIndex, verticalIndex)
+```
+
+Convenience method for removing joystick event listeners.
+
 #### Event types ####
 
 * `type 'buttonpress': GamepadValueEvent`
