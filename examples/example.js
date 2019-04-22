@@ -1,9 +1,13 @@
 const DOT_SIZE = 6;
+let count = 0;
+let dots = {};
 let pressedButtons = {};
 
 gamepads.addEventListener('connect', e => {
     console.log('Gamepad connected:');
     console.log(e.gamepad);
+    count++;
+    document.getElementById('count').textContent = count;
     e.gamepad.addEventListener('buttonpress', e => showPressedButton(e.index));
     e.gamepad.addEventListener('buttonrelease', e => removePressedButton(e.index));
     e.gamepad.addEventListener('joystickmove', e => drawJoystick(e.values, true),
@@ -15,11 +19,13 @@ gamepads.addEventListener('connect', e => {
 gamepads.addEventListener('disconnect', e => {
     console.log('Gamepad disconnected:');
     console.log(e.gamepad);
+    count--;
+    document.getElementById('count').textContent = count;
 });
 
 drawJoystick([0, 0], true);
 drawJoystick([0, 0], false);
-gamepadMappings.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@latest/buttons';
+gamepadMappings.buttonsPath = '/buttons';
 gamepads.start();
 
 function showPressedButton(index) {
@@ -44,14 +50,18 @@ function removePressedButton(index) {
 }
 
 function drawJoystick(values, left) {
-    let id = (left ? 'left' : 'right') + '-joystick';
-    let canvas = document.getElementById(id);
+    let id = (left ? 'left' : 'right');
+    let canvas = document.getElementById(id + '-joystick');
     let ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let x = canvas.width / 2 * (1 + values[0]);
-    let y = canvas.height / 2 * (1 + values[1]);
+    if (dots[id]) {
+        ctx.clearRect(dots[id].x - 1, dots[id].y - 1, DOT_SIZE + 2, DOT_SIZE + 2);
+    }
+    let x = Math.ceil(canvas.width / 2 * (1 + values[0]));
+    let y = Math.ceil(canvas.height / 2 * (1 + values[1]));
+    let rect = { x: x - DOT_SIZE / 2, y: y - DOT_SIZE / 2 };
     ctx.fillStyle = 'cyan';
-    ctx.fillRect(x - DOT_SIZE, y - DOT_SIZE, DOT_SIZE, DOT_SIZE);
+    ctx.fillRect(rect.x, rect.y, DOT_SIZE, DOT_SIZE);
     ctx.strokeStyle = 'black';
-    ctx.strokeRect(x - DOT_SIZE, y - DOT_SIZE, DOT_SIZE, DOT_SIZE);
+    ctx.strokeRect(rect.x, rect.y, DOT_SIZE, DOT_SIZE);
+    dots[id] = rect;
 }
