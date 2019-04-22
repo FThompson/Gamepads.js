@@ -42,7 +42,7 @@ These examples print the gamepad instances related to each connect or disconnect
 * `buttonrelease` fires when a button is released and passes the button `index` to event handlers.
 * `buttonvaluechange` fires when a button value changes and passes the button `index` and `value` to event handlers. This value will typically be `0` or `1` except in the case of an axis button like a trigger, which can have a value between `0` and `1`.
 * `axischange` fires when a gamepad axis changes and passes the axis `index` and `value` to event handlers.
-* `joystickmove` fires when a joystick moves and passes the axes `indices` and `values` to event handlers each as two-item arrays. To use this event, you must pass a two-length array of axis indices to the third parameter of `addEventListener` corresponding to the horizontal and vertical axis indices. Joystick axis values go from `-1` (left/top) to `1` (right/bottom). The library applies a `0.10` deadzone by default, and this value is subtracted from the minimum and maximum joystick axis values to smooth out values in the deadzone.
+* `joystickmove` fires when a joystick moves and passes the axes `indices` and `values` to event handlers each as two-item arrays. To use this event, you must pass a two-length array of axis indices to the third parameter of `addEventListener` corresponding to the horizontal and vertical axis indices. Joystick axis values go from `-1` (left/top) to `1` (right/bottom). This library applies a `0.10` deadzone by default, and this value is subtracted from the absolute minimum and maximum joystick axis values to smooth out values in the deadzone.
 
 ```javascript
 gamepads.addEventListener('connect', e => {
@@ -76,12 +76,12 @@ e.gamepad.addEventListener('joystickmove', e => console.log(e), StandardMapping.
 
 ### GamepadMappings.js Extension
 
-This library contains an extension, `gamepad-mappings.js`, which maps gamepad indices to button image icons. This extension is shipped separately from the core `gamepads.js` due to its size and can be downloaded as `gamepad-mappings.js.zip` in the Releases tab [here](https://github.com/FThompson/Gamepads.js/releases). This ZIP archive contains the `gamepad-mappings.js` script and a folder containing the button images.
+This library contains an extension, `gamepad-mappings.js`, which maps gamepad indices to button image icons. This extension is shipped separately from the core `gamepads.js` due to its size. You can download `gamepad-mappings.js.zip` in the Releases tab [here](https://github.com/FThompson/Gamepads.js/releases). This ZIP archive contains the `gamepad-mappings.js` script and a folder containing the button images.
 
 The `gamepad-mappings.js` file is also available on jsDelivr CDN.
 
 ```html
-<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@latest/gamepad-mappings.js'></script>
+<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@latest/gamepad-mappings.min.js'></script>
 ```
 
 Or you can link the downloaded script.
@@ -123,7 +123,7 @@ Gamepad objects contain an `id` property that can offer clues to what brand of g
 
 ## Live Example
 
-You can view a live example [here](https://codepen.io/finnthompson/pen/VNBwEP) or browse [the /examples directory](https://github.com/FThompson/Gamepads.js/tree/master/examples). In the linked example, you button images should appear when you press buttons and the two dots should mirror the gamepad joystick positions. Be sure to read the following Compatibility section if the code does not behave as expected.
+You can view a live example [here](https://codepen.io/finnthompson/pen/VNBwEP) or browse [the /examples directory](https://github.com/FThompson/Gamepads.js/tree/master/examples). In the linked example, button images should appear when you press buttons and the two dots should mirror your gamepad joystick positions. Be sure to read the following Compatibility section if the code does not behave as expected.
 
 ## Compatibility
 
