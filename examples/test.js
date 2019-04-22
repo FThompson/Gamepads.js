@@ -22,6 +22,7 @@ gamepads.addEventListener('disconnect', event => {
     console.log('gamepad disconnected')
     console.log(event.gamepad)
 })
+gamepadMappings.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@latest/buttons'
 gamepads.start()
 
 window.addEventListener('load', () => {
