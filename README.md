@@ -56,7 +56,10 @@ gamepads.addEventListener('connect', e => {
 
 In this example, the `[0, 1]` parameter in the `joystickmove` event handler corresponds to the axis indices of the left joystick on the standard gamepad mapping.
 
-![Standard gamepad mapping](standard-mapping.png)
+<figure>
+    <img src='standard-mapping.png' title='Standard gamepad mapping'>
+    <figcaption>The standard gamepad mapping showing buttons and axes to indices. Diagram courtesy of <a href='http://www.w3.org/TR/gamepad/' title='W3C Gamepad Specification'>W3C.org</a></figcaption>
+</figure>
 
 You can query a gamepad to determine if it follows the standard gamepad mapping using `gamepad.mapping`. This value will either be `"standard"` or `""`.
 
