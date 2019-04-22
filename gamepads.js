@@ -40,7 +40,7 @@ const gamepads = (() => {
                 if (index && gamepad !== null) {
                     if (gamepad.index !== undefined) {
                         if (gamepad.index in this.gamepads) {
-                            this.gamepads[gamepad.index].update()
+                            this.gamepads[gamepad.index].update(gamepad)
                         } else {
                             this.gamepads[gamepad.index] = new Gamepad(gamepad)
                             let event = new GamepadConnectionEvent(this.gamepads[gamepad.index], 'connect')
@@ -133,7 +133,8 @@ const gamepads = (() => {
         isConnected() {
             // uses _last so the value can be set from gamepads 'disconnect' event
             // necessary for browsers that do not automatically update gamepad values
-            return this._last.connected
+            // return this._last.connected
+            return this.gamepad.connected && this._last.connected;
         }
     
         getMapping() {
@@ -146,13 +147,25 @@ const gamepads = (() => {
             }
         }
     
-        update() {
-            if (this.gamepad.connected && this._last.connected) {  // compare only against recent connected frame
-                this._compareButtons(this.gamepad.buttons, this._last.buttons)
-                this._compareAxes(this.gamepad.axes, this._last.axes)
-                this._compareJoysticks(this.gamepad.axes, this._last.axes)
+        update(gamepad) {
+            let updatesReferences = gamepad.timestamp === this.gamepad.timestamp
+            let oldGamepad, newGamepad;
+            if (!updatesReferences) {
+                // chrome gamepad instances are snapshots
+                oldGamepad = this.gamepad;
+                newGamepad = gamepad;
+                this.gamepad = gamepad;
+            } else {
+                // firefox gamepad instances are live objects
+                oldGamepad = this._last;
+                newGamepad = this.gamepad;
+                this._setLastValues();
             }
-            this._setLastValues()
+            if (newGamepad.connected && oldGamepad.connected) {
+                this._compareButtons(newGamepad.buttons, oldGamepad.buttons);
+                this._compareAxes(newGamepad.axes, oldGamepad.axes);
+                this._compareJoysticks(newGamepad.axes, oldGamepad.axes);
+            }
         }
     
         _compareJoysticks(newAxes, oldAxes) {
