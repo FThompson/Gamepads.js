@@ -159,13 +159,13 @@ const gamepads = (() => {
                 // firefox gamepad instances are live objects
                 oldGamepad = this._last;
                 newGamepad = this.gamepad;
-                this._setLastValues();
             }
             if (newGamepad.connected && oldGamepad.connected) {
                 this._compareButtons(newGamepad.buttons, oldGamepad.buttons);
                 this._compareAxes(newGamepad.axes, oldGamepad.axes);
                 this._compareJoysticks(newGamepad.axes, oldGamepad.axes);
             }
+            this._setLastValues();
         }
     
         _compareJoysticks(newAxes, oldAxes) {

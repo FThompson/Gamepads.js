@@ -1,4 +1,5 @@
 # HTML5 Gamepad API Enhancements #
+[![](https://img.shields.io/github/release/fthompson/gamepads.js.svg)](https://github.com/FThompson/Gamepads.js/releases)
 [![](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
 Gamepads.js is a JavaScript module for tracking Gamepads and events pertaining to their usage. Gamepads.js also offers an optional gamepad mapping extension containing button images.
