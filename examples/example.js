@@ -1,4 +1,8 @@
-const DOT_SIZE = 6;
+let style = window.getComputedStyle(document.body);
+const CONTAINER_SIZE = parseFloat(style.getPropertyValue('--joystick-container-size'));
+const DOT_SIZE = parseFloat(style.getPropertyValue('--joystick-size'));
+const DOT_POSITION = (CONTAINER_SIZE - DOT_SIZE) / 2;
+
 let count = 0;
 let dots = {};
 let pressedButtons = {};
@@ -10,9 +14,9 @@ gamepads.addEventListener('connect', e => {
     document.getElementById('count').textContent = count;
     e.gamepad.addEventListener('buttonpress', e => showPressedButton(e.index));
     e.gamepad.addEventListener('buttonrelease', e => removePressedButton(e.index));
-    e.gamepad.addEventListener('joystickmove', e => drawJoystick(e.values, true),
+    e.gamepad.addEventListener('joystickmove', e => moveJoystick(e.values, true),
             StandardMapping.Axis.JOYSTICK_LEFT);
-    e.gamepad.addEventListener('joystickmove', e => drawJoystick(e.values, false),
+    e.gamepad.addEventListener('joystickmove', e => moveJoystick(e.values, false),
             StandardMapping.Axis.JOYSTICK_RIGHT);
 });
 
@@ -23,8 +27,8 @@ gamepads.addEventListener('disconnect', e => {
     document.getElementById('count').textContent = count;
 });
 
-drawJoystick([0, 0], true);
-drawJoystick([0, 0], false);
+moveJoystick([0, 0], true);
+moveJoystick([0, 0], false);
 gamepadMappings.buttonsPath = '/buttons';
 gamepads.start();
 
@@ -49,19 +53,11 @@ function removePressedButton(index) {
     }
 }
 
-function drawJoystick(values, left) {
-    let id = (left ? 'left' : 'right');
-    let canvas = document.getElementById(id + '-joystick');
-    let ctx = canvas.getContext('2d');
-    if (dots[id]) {
-        ctx.clearRect(dots[id].x - 1, dots[id].y - 1, DOT_SIZE + 2, DOT_SIZE + 2);
-    }
-    let x = Math.ceil(canvas.width / 2 * (1 + values[0]));
-    let y = Math.ceil(canvas.height / 2 * (1 + values[1]));
-    let rect = { x: x - DOT_SIZE / 2, y: y - DOT_SIZE / 2 };
-    ctx.fillStyle = 'cyan';
-    ctx.fillRect(rect.x, rect.y, DOT_SIZE, DOT_SIZE);
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(rect.x, rect.y, DOT_SIZE, DOT_SIZE);
-    dots[id] = rect;
+function moveJoystick(values, isLeft) {
+    let id = (isLeft ? 'left' : 'right');
+    let joystick = document.getElementById(id + '-joystick');
+    let x = DOT_POSITION + CONTAINER_SIZE / 2 * values[0];
+    let y = DOT_POSITION + CONTAINER_SIZE / 2 * values[1];
+    joystick.style.top = y + 'px';
+    joystick.style.left = x + 'px';
 }

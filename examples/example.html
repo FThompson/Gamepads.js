@@ -4,11 +4,66 @@
         <title>Gamepads.js Example</title>
         <script src='../gamepads.js'></script>
         <script src='../gamepad-mappings.js'></script>
+        <style>
+            :root {
+                --joystick-size: 6px;
+                --joystick-container-size: 100px;
+            }
+
+            .joystick {
+                display: inline-block;
+                width: var(--joystick-container-size);
+                height: var(--joystick-container-size);
+                border: 1px solid lightgrey;
+                border-radius: var(--joystick-container-size);
+            }
+
+            .joystick-dot {
+                width: var(--joystick-size);
+                height: var(--joystick-size);
+                background-color: cyan;
+                border: 1px solid black;
+                border-radius: var(--joystick-size);
+                position: relative;
+            }
+
+            .crosshair {
+                width: calc(var(--joystick-container-size) + 2px);
+                height: calc(var(--joystick-container-size) + 2px);
+                margin-top: -9px;
+                margin-left: -1px;
+            }
+
+            .crosshair .horizontal {
+                border-top: 1px solid lightgray;
+                margin-top: calc((var(--joystick-container-size) + 2px) / 2);
+            }
+
+            .crosshair .vertical {
+                width: 1px;
+                height: var(--joystick-container-size);
+                border-left: 1px solid lightgray;
+                margin-left: calc((var(--joystick-container-size) + 2px) / 2);
+                margin-top: calc((var(--joystick-container-size) + 2px) / -2);
+            }
+        </style>
     </head>
     <body>
         <p>Gamepads connected: <span id='count'>0</span></p>
-        <canvas id='left-joystick' width='100' height='100'></canvas>
-        <canvas id='right-joystick' width='100' height='100'></canvas>
+        <div class='joystick'>
+            <div id='left-joystick' class='joystick-dot'></div>
+            <div class='crosshair'>
+                <div class='horizontal'></div>
+                <div class='vertical'></div>
+            </div>
+        </div>
+        <div class='joystick'>
+            <div id='right-joystick' class='joystick-dot'></div>
+            <div class='crosshair'>
+                <div class='horizontal'></div>
+                <div class='vertical'></div>
+            </div>
+        </div>
         <div id='pressed-buttons'></div>
         <script src='example.js'></script>
     </body>
