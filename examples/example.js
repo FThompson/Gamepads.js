@@ -4,7 +4,7 @@ const DOT_SIZE = parseFloat(style.getPropertyValue('--joystick-size'));
 const DOT_POSITION = (CONTAINER_SIZE - DOT_SIZE) / 2;
 
 let count = 0;
-let dots = {};
+let mapping = 'Xbox One';
 let pressedButtons = {};
 
 gamepads.addEventListener('connect', e => {
@@ -27,6 +27,9 @@ gamepads.addEventListener('disconnect', e => {
     document.getElementById('count').textContent = count;
 });
 
+let mappingDropdown = document.getElementById('gamepad-mapping');
+mappingDropdown.addEventListener('change', () => mapping = mappingDropdown.value);
+
 moveJoystick([0, 0], true);
 moveJoystick([0, 0], false);
 gamepadMappings.buttonsPath = '/buttons';
@@ -34,7 +37,7 @@ gamepads.start();
 
 function showPressedButton(index) {
     if (!pressedButtons[index]) {
-        let button = gamepadMappings.getButton('Xbox One', index);
+        let button = gamepadMappings.getButton(mapping, index);
         if (button) {
             let img = document.createElement('img');
             img.src = button.buttonImageSrc;

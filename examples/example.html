@@ -49,22 +49,31 @@
         </style>
     </head>
     <body>
-        <p>Gamepads connected: <span id='count'>0</span></p>
-        <div class='joystick'>
-            <div id='left-joystick' class='joystick-dot'></div>
-            <div class='crosshair'>
-                <div class='horizontal'></div>
-                <div class='vertical'></div>
+        <label for='gamepad-mapping'>Gamepad button images: </label>
+        <select id='gamepad-mapping'>
+            <option value='Xbox 360'>Xbox 360</option>
+            <option value='Xbox One' selected>Xbox One</option>
+            <option value='PS3'>PS3</option>
+            <option value='PS4'>PS4</option>
+        </select>
+        <div id='gamepad-test'>
+            <p>Gamepads connected: <span id='count'>0</span></p>
+            <div class='joystick'>
+                <div id='left-joystick' class='joystick-dot'></div>
+                <div class='crosshair'>
+                    <div class='horizontal'></div>
+                    <div class='vertical'></div>
+                </div>
             </div>
-        </div>
-        <div class='joystick'>
-            <div id='right-joystick' class='joystick-dot'></div>
-            <div class='crosshair'>
-                <div class='horizontal'></div>
-                <div class='vertical'></div>
+            <div class='joystick'>
+                <div id='right-joystick' class='joystick-dot'></div>
+                <div class='crosshair'>
+                    <div class='horizontal'></div>
+                    <div class='vertical'></div>
+                </div>
             </div>
+            <div id='pressed-buttons'></div>
         </div>
-        <div id='pressed-buttons'></div>
         <script src='example.js'></script>
     </body>
 </html>
