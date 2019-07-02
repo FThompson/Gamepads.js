@@ -1,8 +1,9 @@
 # HTML5 Gamepad API Enhancements #
 [![](https://img.shields.io/github/release/fthompson/gamepads.js.svg)](https://github.com/FThompson/Gamepads.js/releases/latest)
+[![](https://img.shields.io/bundlephobia/min/gamepads.svg)](https://www.npmjs.com/package/gamepads)
 [![](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-Gamepads.js is a JavaScript module for tracking Gamepads and events pertaining to their usage. Gamepads.js also offers an optional gamepad mapping extension containing button images.
+Gamepads.js is a JavaScript module for tracking Gamepads and events pertaining to their usage. Gamepads.js also offers an optional gamepad icons extension containing button images, located in [the gamepad-icons directory](https://github.com/FThompson/Gamepads.js/tree/master/examples).
 
 ## Why use this library instead of the built-in Gamepad API?
 
@@ -10,29 +11,35 @@ The [existing Gamepad standard](https://developer.mozilla.org/en-US/docs/Web/API
 
 ## Installation
 
-Include the script hosted on jsDelivr CDN.
+### Via npm
 
-```html
-<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@latest/gamepads.min.js'></script>
+```
+npm install gamepads
 ```
 
-Or [download the script](https://github.com/FThompson/Gamepads.js/blob/master/gamepads.js) and include it on your page.
+```javascript
+import Gamepads from 'gamepads';
+```
+
+### Via script tag
+
+Include the script hosted on jsDelivr CDN or download it and include it on your page.
 
 ```html
-<script src='gamepads.js'></script>
+<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.0/gamepads.min.js'></script>
 ```
 
 ## Usage
 
-The `gamepads.js` script exposes the `gamepads` object that takes care of event polling and tracking which gamepads are currently connected. You can add event handlers to this object to track when a gamepad is connected or disconnected.
+The `gamepads.js` script exposes the `Gamepads` object that takes care of event polling and tracking which gamepads are currently connected. You can add event handlers to this object to track when a gamepad is connected or disconnected.
 
 ```javascript
-gamepads.addEventListener('connect', e => {
+Gamepads.addEventListener('connect', e => {
     console.log('Gamepad connected');
     console.log(e.gamepad);
 });
 
-gamepads.addEventListener('disconnect', e => {
+Gamepads.addEventListener('disconnect', e => {
     console.log('Gamepad disconnected');
     console.log(e.gamepad);
 });
@@ -46,7 +53,7 @@ These examples print the gamepad instances related to each connect or disconnect
 * `joystickmove` fires when a joystick moves and passes the axes `indices` and `values` to event handlers each as two-item arrays. To use this event, you must pass a two-length array of axis indices to the third parameter of `addEventListener` corresponding to the horizontal and vertical axis indices. Joystick axis values go from `-1` (left/top) to `1` (right/bottom). This library applies a `0.10` deadzone by default, and this value is subtracted from the absolute minimum and maximum joystick axis values to smooth out values in the deadzone.
 
 ```javascript
-gamepads.addEventListener('connect', e => {
+Gamepads.addEventListener('connect', e => {
     console.log('Gamepad connected');
     console.log(e.gamepad);
     e.gamepad.addEventListener('buttonpress', e => console.log(e));
@@ -57,7 +64,7 @@ gamepads.addEventListener('connect', e => {
 
 In this example, the `[0, 1]` parameter in the `joystickmove` event handler corresponds to the axis indices of the left joystick on the standard gamepad mapping.
 
-![Standard gamepad mapping](standard-mapping.png)
+![Standard gamepad mapping](https://github.com/FThompson/Gamepads.js/blob/master/standard-mapping.png?raw=true)
 <p align='center'><sub><sup>The standard gamepad mapping showing buttons and axes to indices. Diagram courtesy of <a href='http://www.w3.org/TR/gamepad/' title='W3C Gamepad Specification'>W3C.org</a></sup></sub></p>
 
 You can query a gamepad to determine if it follows the standard gamepad mapping using `gamepad.mapping`. This value will either be `"standard"` or `""`.
@@ -76,56 +83,9 @@ Notice that the standard mapping object contains joystick index pairs you can us
 e.gamepad.addEventListener('joystickmove', e => console.log(e), StandardMapping.Axis.JOYSTICK_LEFT);
 ```
 
-### GamepadMappings.js Extension
-
-This library contains an extension, `gamepad-mappings.js`, which maps gamepad indices to button image icons. This extension is shipped separately from the core `gamepads.js` due to its size. You can download `gamepad-mappings.js.zip` in the Releases tab [here](https://github.com/FThompson/Gamepads.js/releases). This ZIP archive contains the `gamepad-mappings.js` script and a folder containing the button images.
-
-The `gamepad-mappings.js` file is also available on jsDelivr CDN.
-
-```html
-<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@latest/gamepad-mappings.min.js'></script>
-```
-
-Or you can link the downloaded script.
-
-```html
-<script src='gamepad-mappings.js'></script>
-```
-
-The `gamepad-mappings.js` script exposes the `gamepadMappings` object that you can use to translate gamepad indices to button names and images through the `gamepadMappings.getButton` function.
-
-```javascript
-gamepads.addEventListener('connect', e => {
-    console.log('Gamepad connected');
-    console.log(e.gamepad);
-    e.gamepad.addEventListener('buttonpress', e => {
-        let button = gamepadMappings.getButton('Xbox One', e.index);
-        console.log(button);
-    });
-});
-```
-
-You must specify one of the following supported mapping names as the first parameter to `getButton`:
-* `"Xbox One"`
-* `"Xbox 360"`
-* `"PS4"`
-* `"PS3"`
-
-The `gamepadMappings.getButton` function returns an object containing `mappingName`, `buttonName` (such as `"Y"`), and `buttonImageSrc`, which is the URL for the button's image starting with the default path `/buttons`. You can change the root path of `buttonImageSrc` by setting `gamepadMappings.buttonsPath`.
-
-You can place the button images in any directory you like, or use jsDelivr CDN for accessing button images:
-
-```javascript
-gamepadMappings.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@latest/buttons';
-```
-
-#### Detecting Gamepad Model
-
-Gamepad objects contain an `id` property that can offer clues to what brand of gamepad is connected, but you cannot rely on this value because some drivers map gamepads to Xbox 360 layouts for compatibility. Instead, you should give users the option to choose which mapping to display and use their selected mapping in `gamepadMapping.getButton` calls throughout your application.
-
 ## Live Example
 
-You can view a live example [here](https://codepen.io/finnthompson/pen/VNBwEP) or browse [the /examples directory](https://github.com/FThompson/Gamepads.js/tree/master/examples). In the linked example, button images should appear when you press buttons and the two dots should mirror your gamepad joystick positions. Be sure to read the following Compatibility section if the code does not behave as expected.
+You can view a live example [here](https://codepen.io/finnthompson/pen/VNBwEP) or browse [the /examples directory](https://github.com/FThompson/Gamepads.js/tree/master/examples). In the linked example, button images should appear when you press buttons and the two dots should mirror your gamepad joystick positions. The examples folder also contains a similar example created with React. Be sure to read the following Compatibility section if the code does not behave as expected. 
 
 ## Compatibility
 
@@ -142,15 +102,15 @@ If you have a browser/gamepad configuration that does not work with this library
 ## `GamepadHandler` object
 
 ```javascript
-gamepads
+Gamepads
 ```
 
-A `GamepadHandler` singleton is exposed as `gamepads`. This object takes care of polling the HTML5 API for gamepads and tracking which gamepads are currently connected. Call `gamepads.start()` to begin polling.
+A `GamepadHandler` singleton is exposed as `Gamepads`. This object takes care of polling the HTML5 API for gamepads and tracking which gamepads are currently connected. Call `Gamepads.start()` to begin polling.
 
 ### Methods
 
 ```javascript
-gamepads.addEventListener(type, callback)
+Gamepads.addEventListener(type, callback)
 ```
 
 Adds an event listener to the page's gamepad handler.
@@ -168,25 +128,25 @@ Event listeners are called in order of most recently added.
    Fires when a gamepad is disconnected.
 
 ```javascript
-gamepads.removeEventListener(type, callback)
+Gamepads.removeEventListener(type, callback)
 ```
 
 Removes an event listener from the page's gamepad handler.
 
 ```javascript
-gamepads.start()
+Gamepads.start()
 ```
 
 Begins polling and updating available Gamepads at the screen frame rate.
 
 ```javascript
-gamepads.poll()
+Gamepads.poll()
 ```
 
 Polls and updates all available Gamepads. You may call this manually (via `setInterval` for example) if you need the module to update gamepads at a different rate than the screen frame rate.
 
 ```javascript
-gamepads.stop()
+Gamepads.stop()
 ```
 
 Pauses polling and updating of gamepads. May be resumed by `start()`.
@@ -194,19 +154,19 @@ Pauses polling and updating of gamepads. May be resumed by `start()`.
 ### Properties
 
 ```javascript
-gamepads.gamepads
+Gamepads.gamepads
 ```
 
 The map of all connected `Gamepad` objects `{ index: gamepad }`.
 
 ```javascript
-gamepads.paused
+Gamepads.paused
 ```
 
 Read-only property indicating whether or not polling is paused.
 
 ```javascript
-gamepads.supported
+Gamepads.supported
 ```
 
 Read-only property indicating whether or not the current browser supports the gamepads API.
@@ -372,42 +332,6 @@ The joystick deadzone to apply. Defaults to `0.10`. Must be set to range `[0, 1)
 
 A dictionary object containing button/axis `index` values for the `standard` gamepad mapping. Use `StandardMapping.Button` for buttons and `StandardMapping.Axis` for axes.
 
-## `GamepadMappingHandler` object
-
-```javascript
-gamepadMappings
-```
-
-A `GamepadMappingHandler` singleton is exposed as `gamepadMappings`. This object takes care of querying supported gamepad mappings.
-
-### Methods
-
-```javascript
-gamepadMappings.getButton(mappingName, index)
-```
-
-Gets the given mapping's button at the given index. Returns an object containing `mappingName` (e.g. `'Xbox One'`), `buttonName` (e.g. `'Y'`), and `buttonImageSrc`.
-
-You can use the following mappings:
-* Xbox 360
-* Xbox One
-* PS3
-* PS4
-
-### Properties
-
-```javascript
-gamepadMappings.buttonsPath
-```
-
-The root path to find button images in. Change this property if you wish to store button image assets somewhere other than as a sibling to `gamepad-mappings.js`. Defaults to `/buttons`.
-
-```javascript
-gamepadMappings.mappings
-```
-
-A dictionary of all supported mappings.
-
 # TODO
 
 * Improve browser compatibility.
@@ -418,7 +342,3 @@ A dictionary of all supported mappings.
 # Own a gamepad? #
 
 With so many possible configurations of gamepads, browsers, and operating systems out there, I need help to verify support for various gamepad configurations. Please open issues or pull requests if you find any problems with this module or have any suggestions towards improving support.
-
-# Gamepad Icon Credits
-
-Gamepad button icon assets courtesy of [Nicolae Berbece "Xelu"](https://opengameart.org/content/free-keyboard-and-controllers-prompts-pack) and are released in the public domain under Creative Commons 0 (CC0).

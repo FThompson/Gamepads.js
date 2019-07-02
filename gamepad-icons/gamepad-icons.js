@@ -56,17 +56,17 @@ class _GamepadButton {
     }
 }
 
-class GamepadMappingHandler {
+class GamepadIconHandler {
     constructor() {
-        if (GamepadMappingHandler._instance) {
-            return GamepadMappingHandler._instance
+        if (GamepadIconHandler._instance) {
+            return GamepadIconHandler._instance
         }
         this.buttonsPath = '/buttons'
         this.mappings = {}
         for (let mapping of ALL_MAPPINGS) {
             this.mappings[mapping.name] = mapping
         }
-        GamepadMappingHandler._instance = this
+        GamepadIconHandler._instance = this
     }
 
     getButton(mappingName, index) {
@@ -80,4 +80,19 @@ class GamepadMappingHandler {
     }
 }
 
-const gamepadMappings = new GamepadMappingHandler()
+const GamepadIcons = new GamepadIconHandler();
+
+/**
+ * Export the module (Node) or place it into the global scope (Browser).
+ * 
+ * This approach may not cover all use cases; see Underscore.js
+ * or Q.js for more comprehensive approaches that could be used if needed.
+ */
+(function() {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = exports = GamepadIcons;
+    } else {
+        let root = this || window;
+        root.GamepadIcons = root.gamepadMappings = GamepadIcons;
+    }
+})();

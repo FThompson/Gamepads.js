@@ -1,4 +1,4 @@
-const gamepads = (() => {
+const Gamepads = (() => {
     class GamepadHandler {
         constructor() {
             if (GamepadHandler._instance) {
@@ -346,4 +346,21 @@ const StandardMapping = {
         JOYSTICK_LEFT: [0, 1],
         JOYSTICK_RIGHT: [2, 3]
     }
-}
+};
+
+/**
+ * Export the module (Node) or place it into the global scope (Browser).
+ * 
+ * This approach may not cover all use cases; see Underscore.js
+ * or Q.js for more comprehensive approaches that could be used if needed.
+ */
+(function() {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = exports = Gamepads;
+        module.exports.StandardMapping = exports.StandardMapping = StandardMapping;
+    } else {
+        let root = this || window;
+        root.Gamepads = root.gamepads = Gamepads;
+        root.StandardMapping = StandardMapping;
+    }
+})();

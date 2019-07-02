@@ -1,3 +1,7 @@
+// This file uses legacy module names:
+// - `gamepads` instead of `Gamepads`
+// - `gamepadMappings` instead of `GamepadIcons`
+
 let myGamepad = null
 
 gamepads.addEventListener('connect', event => {
@@ -16,13 +20,12 @@ gamepads.addEventListener('connect', event => {
     gamepad.addJoystickEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_LEFT)
     gamepad.addEventListener('joystickmove', printJoystick, StandardMapping.Axis.JOYSTICK_RIGHT)
     myGamepad = gamepad
-    console.log(myGamepad._callbacks)
 })
 gamepads.addEventListener('disconnect', event => {
     console.log('gamepad disconnected')
     console.log(event.gamepad)
 })
-gamepadMappings.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@latest/buttons'
+gamepadMappings.buttonsPath = '/gamepad-icons/buttons'
 gamepads.start()
 
 window.addEventListener('load', () => {

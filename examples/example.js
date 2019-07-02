@@ -1,3 +1,7 @@
+// This file uses legacy module names:
+// - `gamepads` instead of `Gamepads`
+// - `gamepadMappings` instead of `GamepadIcons`
+
 let style = window.getComputedStyle(document.body);
 const CONTAINER_SIZE = parseFloat(style.getPropertyValue('--joystick-container-size'));
 const DOT_SIZE = parseFloat(style.getPropertyValue('--joystick-size'));
@@ -32,7 +36,7 @@ mappingDropdown.addEventListener('change', () => mapping = mappingDropdown.value
 
 moveJoystick([0, 0], true);
 moveJoystick([0, 0], false);
-gamepadMappings.buttonsPath = '/buttons';
+gamepadMappings.buttonsPath = '/gamepad-icons/buttons';
 gamepads.start();
 
 function showPressedButton(index) {
