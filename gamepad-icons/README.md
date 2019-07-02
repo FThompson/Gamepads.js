@@ -3,7 +3,7 @@
 [![](https://img.shields.io/bundlephobia/min/gamepad-icons.svg)](https://www.npmjs.com/package/gamepad-icons)
 [![](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-GamepadIcons is an extension to Gamepads.js offering gamepad icons for common gamepad mappings.
+Gamepad Icons is an extension to Gamepads.js offering gamepad icons for common gamepad mappings. This package is independant from the main package. See the main package [on GitHub](https://github.com/FThompson/Gamepads.js) or [on npm](https://www.npmjs.com/package/gamepads).
 
 ## Installation
 
@@ -26,7 +26,7 @@ GamepadIcons.buttonsPath = 'my/path';
 Alternatively, you can use jsDelivr CDN for accessing button images:
 
 ```javascript
-GamepadIcons.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.0/gamepad-icons/buttons';
+GamepadIcons.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.1/gamepad-icons/buttons';
 ```
 
 ### Via script tag
@@ -34,7 +34,7 @@ GamepadIcons.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.
 Add the script via jsDelivr or direct download.
 
 ```html
-<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.0/gamepad-icons/gamepad-icons.min.js'></script>
+<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.1/gamepad-icons/gamepad-icons.min.js'></script>
 ```
 
 You can download the full extension, `gamepad-icons.js.zip` in the Releases tab [here](https://github.com/FThompson/Gamepads.js/releases). This ZIP archive contains the script and a folder containing the button images. Copy the buttons folder to your project and configure the module to find the images.
@@ -46,7 +46,7 @@ GamepadIcons.buttonsPath = 'my/path';
 Alternatively, you can use jsDelivr CDN for accessing button images:
 
 ```javascript
-GamepadIcons.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.0/gamepad-icons/buttons';
+GamepadIcons.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.1/gamepad-icons/buttons';
 ```
 
 ## Usage

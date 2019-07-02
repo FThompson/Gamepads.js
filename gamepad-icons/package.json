@@ -1,6 +1,6 @@
 {
   "name": "gamepad-icons",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A gamepads library extension offering icons mapped to common gamepad buttons.",
   "main": "gamepad-icons.js",
   "scripts": {
@@ -30,5 +30,5 @@
   "bugs": {
     "url": "https://github.com/FThompson/Gamepads.js/issues"
   },
-  "homepage": "https://github.com/FThompson/Gamepads.js/gamepad-icons/#readme"
+  "homepage": "https://github.com/FThompson/Gamepads.js/gamepad-icons"
 }

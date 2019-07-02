@@ -1,6 +1,6 @@
 {
   "name": "gamepads",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A library providing a standardaized way of handling gamepads and gamepad events.",
   "main": "gamepads.js",
   "directories": {
@@ -31,7 +31,7 @@
   "bugs": {
     "url": "https://github.com/FThompson/Gamepads.js/issues"
   },
-  "homepage": "https://github.com/FThompson/Gamepads.js#readme",
+  "homepage": "https://github.com/FThompson/Gamepads.js",
   "files": [
     
   ]

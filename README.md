@@ -3,7 +3,7 @@
 [![](https://img.shields.io/bundlephobia/min/gamepads.svg)](https://www.npmjs.com/package/gamepads)
 [![](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-Gamepads.js is a JavaScript module for tracking Gamepads and events pertaining to their usage. Gamepads.js also offers an optional gamepad icons extension containing button images, located in [the gamepad-icons directory](https://github.com/FThompson/Gamepads.js/tree/master/examples).
+Gamepads.js is a JavaScript module for tracking Gamepads and events pertaining to their usage. Gamepads.js also offers an optional gamepad icons extension containing button images, available [on GitHub](https://github.com/FThompson/Gamepads.js/tree/master/gamepad-icons) or [on npm](https://www.npmjs.com/package/gamepad-icons) as `gamepad-icons`.
 
 ## Why use this library instead of the built-in Gamepad API?
 
@@ -26,7 +26,7 @@ import Gamepads from 'gamepads';
 Include the script hosted on jsDelivr CDN or download it and include it on your page.
 
 ```html
-<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.0/gamepads.min.js'></script>
+<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.1/gamepads.min.js'></script>
 ```
 
 ## Usage
