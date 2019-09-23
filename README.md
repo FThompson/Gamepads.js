@@ -34,6 +34,10 @@ Include the script hosted on jsDelivr CDN or download it and include it on your 
 The `gamepads.js` script exposes the `Gamepads` object that takes care of event polling and tracking which gamepads are currently connected. You can add event handlers to this object to track when a gamepad is connected or disconnected.
 
 ```javascript
+// Start polling
+Gamepads.start();
+
+// Add event listeners
 Gamepads.addEventListener('connect', e => {
     console.log('Gamepad connected');
     console.log(e.gamepad);
