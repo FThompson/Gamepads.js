@@ -33,7 +33,7 @@ const Gamepads = (() => {
     
         poll() {
             // must call getGamepads() to force each gamepad object to update for some browsers (Chrome)
-            let gamepads = navigator.getGamepads ? navigator.getGamepads() : []
+            let gamepads = navigator.getGamepads ? [...navigator.getGamepads()] : []
             let connectedIndices = []
             for (let index in gamepads) {
                 let gamepad = gamepads[index]
