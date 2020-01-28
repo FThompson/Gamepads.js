@@ -26,7 +26,7 @@ import Gamepads from 'gamepads';
 Include the script hosted on jsDelivr CDN or download it and include it on your page.
 
 ```html
-<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.1/gamepads.min.js'></script>
+<script src='https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.2/gamepads.min.js'></script>
 ```
 
 ## Usage
