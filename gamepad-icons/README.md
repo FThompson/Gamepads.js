@@ -26,7 +26,7 @@ GamepadIcons.buttonsPath = 'my/path';
 Alternatively, you can use jsDelivr CDN for accessing button images:
 
 ```javascript
-GamepadIcons.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.1/gamepad-icons/buttons';
+GamepadIcons.buttonsPath = 'https://cdn.jsdelivr.net/gh/FThompson/gamepads.js@1.2.2/gamepad-icons/buttons';
 ```
 
 ### Via script tag
